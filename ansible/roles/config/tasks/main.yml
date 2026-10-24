@@ -1,0 +1,24 @@
+---
+- name: Add aliases to .bashrc
+  blockinfile:
+    path: "{{ bashrc_path }}"
+    marker: "# {mark} Ansible managed aliases block"
+    block: "{{ lookup('ansible.builtin.file', 'aliases-list.txt') }}"
+
+
+# Sets a cronjob to run the maintenance playbook at 5am on Mondays
+- name: Set crontab for automating tasks
+  cron:
+    name: "Run OS maintenance playbook"
+    minute: "0"
+    hour: "5"
+    dow: "0" # 0 Sunday, 1 Monday, 2 Tuesday, 3 Wednesday, 4 Thursday, 5 Friday, 6 Saturday
+    job: "/home/pelochus/homelab/maintenance.sh"
+
+# This can include drivers, for example
+- name: Install OS-related dependencies
+  apt:
+    pkg:
+      "{{ syspkgs }}"
+    state: latest
+  become: true

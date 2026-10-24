@@ -1,0 +1,52 @@
+---
+packages:
+  - git
+  - sudo
+  - rsync
+ # - docker.io # Better use the official docker install guide
+  - uptimed
+  - wget
+  - curl
+  - traceroute
+  - nano
+  - neovim
+  - htop
+  - btop
+  - lm-sensors
+  - iperf3
+  - python3-full
+  - python-is-python3
+  - pip
+  - python3-docker
+  - gnupg
+  - rsync
+  - bleachbit
+  - speedtest-cli
+  # - samba
+  # - samba-common-bin
+  - ksmbd-tools
+  - fastfetch
+  # Webpage:
+  - nodejs
+  - npm
+
+apt_max_cache_age_installs: 3600 # One hour
+
+# Valid for both ksmbd and smbd
+# samba_conf: /etc/samba/smb.conf
+samba_conf: /etc/ksmbd/ksmbd.conf
+samba_user: "{{ user }}"
+samba_name: BolloNAS
+samba_shared: /media/hdd/BolloNAS
+samba_template: ksmbd.conf.j2
+
+# For building webpage
+web_path: ../docker/web/web
+
+# NOTE: These paths are relative to playbook_dir, so initial path is homelab/ansible
+compose_files:
+  - ../docker/media
+  - ../docker/monitoring
+  - ../docker/networking
+  - ../docker/others
+  - ../docker/web

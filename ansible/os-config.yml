@@ -1,0 +1,7 @@
+---
+- name: Configure OS parameters
+  hosts: all
+  become: yes
+  
+  roles:
+   - config

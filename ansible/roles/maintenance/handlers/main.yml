@@ -1,0 +1,5 @@
+- name: Clean cache and remove leftovers
+  apt:
+    autoremove: true
+    autoclean: true
+    clean: true

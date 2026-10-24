@@ -1,0 +1,13 @@
+---
+- name: Run OS maintenance
+  hosts: all
+  become: yes
+
+  roles: 
+    - maintenance
+
+  # NOTE: Cannot be run on localhost
+  post_tasks:
+    - name: Reboot OS
+      reboot:
+        pre_reboot_delay: 10 # Wait 10 seconds, just in case

@@ -1,0 +1,3 @@
+[submodule "docker/web/web"]
+	path = docker/web/web
+	url = git@github.com:Pelochus/web.git

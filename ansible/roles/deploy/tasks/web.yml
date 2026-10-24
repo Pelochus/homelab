@@ -1,0 +1,24 @@
+# This task only pulls dependencies and builds the webpage for production
+# Actually deploying it is automatically done when the docker-compose playbook is run
+
+- name: Install npm dependencies
+  community.general.npm:
+    path: "{{ web_path }}"
+    state: present
+
+- name: Run npm audit fix
+  command: npm audit fix
+  args:
+    chdir: "{{ web_path }}"
+
+- name: Build for production
+  command: npm run build
+  args:
+    chdir: "{{ web_path }}"
+
+# - name: Run preview server
+#   command: npm run preview -- --host
+#   args:
+#     chdir: "{{ project_path }}"
+#   async: 1
+#   poll: 0

@@ -1,0 +1,11 @@
+# Fast clear
+alias c='clear'
+
+# Better ls
+alias ls='exa -laa'
+
+# Colored ip output
+alias ip='ip -c'
+
+# Better cd ..
+alias ..='cd ..'

@@ -1,0 +1,14 @@
+# Ignore whole docker dir
+docker/
+
+# Except for
+!docker/web/docker-compose.yml
+!docker/web/web
+!docker/media/docker-compose.yml
+!docker/monitoring/docker-compose.yml
+!docker/networking/docker-compose.yml
+!docker/others/docker-compose.yml
+!docker/games/docker-compose.yml
+
+# Ignore logs folder
+logs/

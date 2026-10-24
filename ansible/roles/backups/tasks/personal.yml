@@ -1,0 +1,8 @@
+---
+- name: Check if rsync is installed
+  apt:
+    name: rsync
+    state: latest
+
+- name: Backup important files
+  command: rsync

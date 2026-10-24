@@ -1,0 +1,29 @@
+---
+- name: Check if BleachBit is installed
+  apt:
+    name: bleachbit
+    state: latest
+  become: true
+
+- name: Clean with BleachBit
+  command: bleachbit -c --all-but-warning
+  register: out
+  become: true
+
+# Print cleaning result
+# - debug: msg="{{ out }}"
+
+- name: Clean Docker leftovers
+  docker_prune:
+    containers: true
+    containers_filters:
+      until: "{{ docker_prune_filter }}" # Wait for containers to be at least 10 days (see ../defaults/main.yml) without use
+
+    images: true
+    images_filters:
+      dangling: false # Remove all images unused, except the ones referenced by at least one container
+      until: "{{ docker_prune_filter }}" # Same as containers
+
+    builder_cache: true
+
+# TODO: Check logrotate role on Ansible Galaxy. Run once every month, for example

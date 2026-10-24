@@ -1,0 +1,2 @@
+docker_prune_filter: 240h # 10 days
+apt_max_cache_age_updates: 86400 # 1 day

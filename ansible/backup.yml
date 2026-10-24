@@ -1,0 +1,7 @@
+---
+- name: Backup OS and important files
+  hosts: all
+  become: yes # TODO: May not be necessary, check once finished role
+  
+  roles:
+   - backups

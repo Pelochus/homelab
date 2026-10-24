@@ -1,0 +1,4 @@
+---
+user: pelochus
+# Note, not working right now, using all in every playbook manually
+targets: all # Default hosts target
