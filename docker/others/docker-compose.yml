@@ -23,7 +23,7 @@ services:
     restart: unless-stopped
     networks:
       homelab:
-        ipv4_address: 10.0.1.12
+        ipv4_address: 10.0.1.90
 
   pyload-ng:
     image: lscr.io/linuxserver/pyload-ng:latest
@@ -41,9 +41,8 @@ services:
     restart: unless-stopped
     networks:
       homelab:
-        ipv4_address: 10.0.1.13
+        ipv4_address: 10.0.1.91
 
 networks:
   homelab:
     external: true
-

@@ -13,7 +13,7 @@
   community.docker.docker_network:
     name: homelab
     driver: bridge
-    ipam_options:
+    ipam_config:
       - subnet: 10.0.1.0/24
         gateway: 10.0.1.1
 
@@ -21,6 +21,6 @@
 - name: Deploy containers with Compose
   community.docker.docker_compose_v2:
     project_src: "{{ item }}"
-    pull: yes
+    pull: always
     state: present
-  with_items: "{{ compose_files }}"
+  loop: "{{ compose_files }}"

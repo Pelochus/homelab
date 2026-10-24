@@ -11,7 +11,7 @@ services:
     restart: unless-stopped
     networks:
       homelab:
-        ipv4_address: 10.0.1.11
+        ipv4_address: 10.0.1.100
 
 networks:
   homelab:

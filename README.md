@@ -1,39 +1,22 @@
-# pelochus-homelab V2
-Personal home server configuration and automation. I use this repo as a reminder of all I did and why I did it in case I want to redo my server from the ground up in the future. This also allows me to skip some steps for future installs since I automated installations, configuration and maintenance. Made it public in case anyone wants to see my personal home server configuration as a point of reference or want to see my skills in Linux administration and DevOps.
+# pelochus/homelab V3
+Personal home server configuration and automation. I use this repo as a reminder of all I did and why I did it in case I want to redo my server from the ground up in the future. This also allows me to skip some steps for future installs since I automated installations, configuration and maintenance. Made it public in case anyone wants to see my personal home server configuration as a point of reference or want to see my skills in homelabbing.
 
 ## Short Term TODO:
 Adding it here to force myself to do as soon as possible:
-- Switch to Adguard Home (or newer alternatives)
-- Upgrade to Ubuntu 26.04 LTS
-- Rename repo from pelochus/pelochus-homelab to just pelochus/homelab
-  - Update references accordingly throughout whole repo
-  - Including scripts, not only docs
 - Update docs (remove stale references like Readarr, simplify docs)
-- Switch to full DuckDNS (only VPN is needed I believe to be removed from NoIP)
 - Overall improvements, to, for example, Ansible (example: see new fstab setting to avoid maintenance mode, that kind of minor QoL improvements)
 - Add AI node info (BC250)
 - Consider Ansible split per device type (install what is needed on BC250 node differently from N100)
 
-![ServerMainWeb](https://github.com/Pelochus/pelochus-homelab/blob/main/img/server-main-web.png)
+![ServerMainWeb](https://github.com/Pelochus/homelab/blob/main/img/server-main-web.png)
 
 You can see my Homarr instance here, with all the services I have. On the right, you can see my 3D printer webcam.
 In the next diagram you can see my homelab's architecture.
 
-![Architecture](https://github.com/Pelochus/pelochus-homelab/blob/main/img/pelochus-homelab.drawio.png)
-
-**In comparison to V1 (see this repo branches), V2 features:**
-- Changed OS from OrangePi OS to Ubuntu Server (new Mini PC!)
-- Better network organisation (using 10.0.0.0/16 address space)
-- Use of Docker containers and Docker Compose instead of bare-metal installing
-- Added NGINX reverse proxy + using PiHole for organising IPs into local domain names
-- Used a Docker network for increased security
-- Changed to Wireguard Easy
-- Changed from Bash to Ansible
-- Completed backups section
-- Extra! Added my own personal webpage
+![Architecture](https://github.com/Pelochus/homelab/blob/main/img/pelochus-homelab.drawio.png)
 
 ## More info
-More info about this repo in the [wiki](https://github.com/Pelochus/pelochus-homelab/wiki). You can find:
+More info about this repo in the [wiki](https://github.com/Pelochus/homelab/wiki). You can find:
 - Hardware used
 - OS used and its configuration
 - Software installed and deployed
@@ -41,15 +24,10 @@ More info about this repo in the [wiki](https://github.com/Pelochus/pelochus-hom
 - Technical information about Ansible automation and Docker containers used
 
 ## TODO:
-- Use this network config if using a cluster in the future:
-  - 10.0.1.0/24 for node 1 (master?) and its Docker containers
-  - 10.0.2.0/24 for node 2 and its Docker containers 
-  - ...
 - Think of backups automation (Rsync + Bash or Ansible)
 - Some CI/CD and GitOps (i.e.: auto deploy webserver on git push)
 - Use cloud-init for clusters
 - Use k3s
 - Reduce Ansible usage for things updating Dockers
-- Rename repo to just "homelab" (so that pelochus/homelab on URL)
 - Proxmox as base OS, then put Ubuntu Server/Debian on top (or similar)
 - Add more services like Uptime Kuma

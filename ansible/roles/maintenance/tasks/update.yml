@@ -10,9 +10,3 @@
 # Print update result
 # - debug: msg="{{ upd_result }}"
 
-- name: Update Pi-Hole
-  command: pihole -up
-  register: pihole_result
-
-# Print update result
-# - debug: msg="{{ pihole_result }}"

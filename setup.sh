@@ -1,4 +1,4 @@
-#!/bin/bash
+0#!/bin/bash
 #
 # Title: setup.sh
 # Author: Pelochus
@@ -11,24 +11,24 @@
 
 menu() {
     echo "-------------------------------------------------------------------------------------------------"
-    echo 
+    echo
     echo "  ### MENU - Choose an option"
-    echo 
+    echo
     echo "  [1] Do everything"
     echo "  [2] Config OS"
     echo "  [3] Deploy Software"
     echo "  [4] Exit"
-    echo 
+    echo
     echo "-------------------------------------------------------------------------------------------------"
 }
 
 options() {
-    case $1 in 
+    case $1 in
     
         # Do something
         2 | 1)
             ansible-playbook -K os-config.yml
-        ;;& 
+        ;;&
         # This "&" makes it possible to execute following options
 
         # Do something 2
@@ -61,15 +61,15 @@ then
     if [ $1 == '-h' ] || [ $1 == '--help' ]
     then
         echo
-        echo "pelochus-homelab Template Script Help"
+        echo "pelochus/homelab Template Script Help"
         echo
         echo "-a / --auto: Runs all options that don't require user's help. Needs root privileges"
         echo "-h / --help: Shows this help screen"
-        echo 
-        echo "For more information visit https://github.com/Pelochus/pelochus-homelab"
         echo
-        exit 
-    elif [ $1 == '-a' ] || [ $1 == '--auto' ] 
+        echo "For more information visit https://github.com/Pelochus/homelab"
+        echo
+        exit
+    elif [ $1 == '-a' ] || [ $1 == '--auto' ]
     then
         options 1
         echo
@@ -78,7 +78,7 @@ then
         echo "//////////////////////////////"
         echo
         exit
-    fi 
+    fi
 fi
 
 echo
@@ -106,7 +106,7 @@ then
     while true
     do
         menu
-        read chosen 
+        read chosen
         options $chosen
     done
 else

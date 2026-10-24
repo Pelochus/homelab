@@ -19,7 +19,7 @@ services:
     #   - '7575:7575'
     networks:
       homelab:
-        ipv4_address: 10.0.1.14
+        ipv4_address: 10.0.1.20
 
   netdata:
     container_name: netdata
@@ -44,7 +44,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
       homelab:
-        ipv4_address: 10.0.1.15
+        ipv4_address: 10.0.1.21
 
 #  grafana:
 #    container_name: grafana
@@ -59,7 +59,7 @@ services:
 #      - '3000:3000'
 #    networks:
 #      homelab:
-#        ipv4_address: 10.0.1.15
+#        ipv4_address: 10.0.1.22
 
 networks:
   homelab:

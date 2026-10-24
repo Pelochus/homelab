@@ -2,7 +2,7 @@
 
 # Variables
 DATE=$(date +"%Y-%m-%d_%H-%M") # Everything but seconds
-BASE_DIR="/home/pelochus/pelochus-homelab"
+BASE_DIR="/home/pelochus/homelab"
 LOG_DIR="${BASE_DIR}/logs"
 LOG_FILE="${LOG_DIR}/maintenance-${DATE}.log"
 PLAYBOOK_DIR="${BASE_DIR}/ansible"

@@ -37,7 +37,7 @@ services:
     restart: 'unless-stopped'
     networks:
       homelab:
-        ipv4_address: 10.0.1.17
+        ipv4_address: 10.0.1.30
 
   ####################################################
   # Arr configuration is extracted from hotio's images
@@ -58,7 +58,7 @@ services:
     restart: 'unless-stopped'
     networks:
       homelab:
-        ipv4_address: 10.0.1.18
+        ipv4_address: 10.0.1.31
 
   radarr:
     container_name: radarr
@@ -79,7 +79,7 @@ services:
       - qbittorrent-nox
     networks:
       homelab:
-        ipv4_address: 10.0.1.19
+        ipv4_address: 10.0.1.32
 
   sonarr:
     container_name: sonarr
@@ -100,7 +100,7 @@ services:
       - qbittorrent-nox
     networks:
       homelab:
-        ipv4_address: 10.0.1.20
+        ipv4_address: 10.0.1.33
 
   ####################################################
   # End of Arr configuration
@@ -129,7 +129,7 @@ services:
       - 993 # Search for render group id with: cat /etc/group | grep render
     networks:
       homelab:
-        ipv4_address: 10.0.1.22
+        ipv4_address: 10.0.1.34
 
   jellyseerr:
     container_name: jellyseerr
@@ -137,8 +137,8 @@ services:
     environment:
         - LOG_LEVEL=debug
         - TZ=Europe/Madrid
-    # ports:
-    #     - 5055:5055
+    ports:
+        - 5055:5055
     volumes:
         - ./jellyseer/config:/app/config
     restart: unless-stopped
@@ -148,7 +148,7 @@ services:
       - radarr
     networks:
       homelab:
-        ipv4_address: 10.0.1.23
+        ipv4_address: 10.0.1.35
 
 networks:
   homelab:

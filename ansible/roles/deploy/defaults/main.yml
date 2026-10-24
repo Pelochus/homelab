@@ -8,7 +8,9 @@ packages:
   - wget
   - curl
   - nano
+  - neovim
   - htop
+  - btop
   - iperf3
   - python3-full
   - python-is-python3
@@ -21,7 +23,7 @@ packages:
   # - samba
   # - samba-common-bin
   - ksmbd-tools
-  - neofetch
+  - fastfetch
   # Webpage:
   - nodejs
   - npm
@@ -39,7 +41,7 @@ samba_template: ksmbd.conf.j2
 # For building webpage
 web_path: ../docker/web/web
 
-# NOTE: This paths are relative to playbook_dir, so initial path is pelochus-homelab/ansible
+# NOTE: These paths are relative to playbook_dir, so initial path is homelab/ansible
 compose_files:
   - ../docker/media
   - ../docker/monitoring
