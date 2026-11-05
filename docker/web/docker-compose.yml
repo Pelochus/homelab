@@ -4,10 +4,11 @@ services:
   web:
     container_name: web
     image: nginx:latest
+    # Ports stay closed: the site is reachable only through the reverse proxy.
     # ports:
     #   - "8888:80"
     volumes:
-      - ./web/dist:/usr/share/nginx/html:ro
+      - ./web/site:/usr/share/nginx/html:ro
     restart: unless-stopped
     networks:
       homelab:

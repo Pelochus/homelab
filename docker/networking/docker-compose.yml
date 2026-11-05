@@ -10,6 +10,11 @@ services:
       # - '81:81' # WebUI port
       - '443:443'
     volumes:
+      # All routing state (upstreams, domains, redirects, ACME certs) lives in
+      # these two dirs, not in this file: they are untracked and get backed up
+      # in the encrypted config zip (see backups/configs/README.md), never
+      # committed. A fresh clone therefore starts with a proxy that routes
+      # nowhere until the UI state is restored or rebuilt.
       - ./nginx/data:/data
       - ./nginx/letsencrypt:/etc/letsencrypt
     networks:
@@ -45,7 +50,7 @@ services:
       # - PASSWORD=foobar123
       # - WG_PORT=51820
       # - WG_DEFAULT_ADDRESS=10.8.0.x
-      - WG_DEFAULT_DNS=10.0.1.1 # Local address for DNS server
+      - WG_DEFAULT_DNS=10.0.1.11 # adguard container, see adguardhome above
       # - WG_MTU=1420
       # - WG_ALLOWED_IPS=192.168.15.0/24, 10.0.1.0/24
       # - WG_PERSISTENT_KEEPALIVE=25

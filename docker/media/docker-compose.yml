@@ -9,14 +9,14 @@ services:
   qbittorrent-nox:
     container_name: qbittorrent-nox
     environment:
-      #- PAGID=10000
-      #- PGID=1000
-      #- PUID=1000
+      # - PAGID=10000
+      # - PGID=1000
+      # - PUID=1000
       - QBT_EULA=accept
       - QBT_VERSION=latest
       - QBT_WEBUI_PORT=8080
       - TZ=Europe/Madrid
-      #- UMASK=022
+      # - UMASK=022
     image: qbittorrentofficial/qbittorrent-nox:latest
     ports:
       # for bittorrent traffic
@@ -46,7 +46,7 @@ services:
     container_name: prowlarr
     image: ghcr.io/hotio/prowlarr
     # ports:
-      # - "9696:9696"
+    # - "9696:9696"
     environment:
       - PUID=1000
       - PGID=1000
@@ -92,7 +92,7 @@ services:
       - TZ=Europe/Madrid
     volumes:
       - ./sonarr/config:/config
-      - ./sonarr/config:/data
+      - ./sonarr/data:/data
       - /media:/media
     restart: 'unless-stopped'
     depends_on:
@@ -116,7 +116,7 @@ services:
       - type: bind
         source: /media/hdd/BolloNAS/Jellyfin
         target: /media
-      # - /path/to/media2:/media2:ro
+        # - /path/to/media2:/media2:ro
     restart: 'unless-stopped'
     # Optional - may be necessary for docker healthcheck to pass if running in host network mode
     extra_hosts:
