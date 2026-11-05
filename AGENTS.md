@@ -15,13 +15,18 @@ compose stack per service group), `docker/web/web` (submodule of the personal pa
   one job). If a layer is only kept as a fallback, say so in its README.
 - **Security over convenience.** Secrets never live in tracked files: a stack that
   needs one reads a gitignored `.env`. Unattended system upgrades are the OS layer,
-  not an ansible task. A container gets an explicit `init`, a pinned version, and no
-  `latest` tag.
+  not an ansible task. Every container gets `init: true` unless it shares the host
+  PID namespace.
+- **Images track upstream.** Every image carries an explicit `:latest`, never a pin
+  and never a bare tag: upstream drift is accepted the way `apt upgrade` is accepted,
+  and the monthly refresh repairs a bad release.
 - **Anything that can drift should be a variable.** Hardcoded paths, ports, uids,
-  package lists, and per-node facts belong in `group_vars` or a compose file's own
-  header, not inside a task. The names already in use — `homelab_root`, `user`,
-  `compose_stacks`, `docker_prune_filter`, `deploy_samba_share`, `config_syspkgs`,
-  `backups_paths` — are the pattern to follow, not examples to invent.
+  package lists, and per-node facts belong in `group_vars`, a compose `.env`, or a
+  `${VAR:-default}` in the compose file, not inside a task or a literal line. The
+  names already in use — `homelab_root`, `user`, `compose_stacks`,
+  `docker_prune_filter`, `deploy_samba_share`, `config_syspkgs`, `backups_paths`,
+  `HOMELAB_TZ`, `MEDIA_ROOT`, `WG_HOST` — are the pattern to follow, not examples to
+  invent.
 
 ## 2. Think long-term and extensible
 
@@ -109,9 +114,9 @@ second node, e.g. the AMD BC250 box, running a different subset). So:
 
 ## 7. Gotchas that will bite again
 
-- `.gitignore` ignores `docker/` outright and re-includes each compose file by name
-  (`!docker/<stack>/docker-compose.yml`), so a new stack needs a new `!` line — until
-  that pattern descends, `git add -f` is the workaround.
+- `.gitignore` keeps the stack dirs and their compose files and ignores everything
+  inside them, so a new stack's `docker-compose.yml` is addable straight away while
+  its state dirs stay untracked.
 - `logs/` and `.pi/`, `.cache/`, `.ansible/` are ignored on purpose; do not re-add
   generated state.
 - Submodule pins follow `main` only when moved deliberately; `git submodule update`
@@ -122,6 +127,9 @@ second node, e.g. the AMD BC250 box, running a different subset). So:
 - systemd units need absolute executables (`/usr/bin/ansible-playbook`, not a bare
   name), and `docker_compose_v2` with `pull: always` always reports a change — that
   is the monthly-refresh timer's intent, not a bug.
+- A container with `network_mode: host` or `pid: host` sits outside the `homelab`
+  network and cannot resolve any `10.0.1.x` peer: it reaches siblings through a
+  shared volume or the public URL (`beszel-agent`, `BESZEL_URL`, `beszel.sock`).
 
 ## 8. References
 
