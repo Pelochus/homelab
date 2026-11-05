@@ -1,0 +1,23 @@
+---
+# yamlfmt (google/yamlfmt) settings: one style for every YAML file here, so
+# Docker Compose, Ansible and the CI workflow all get the same indentation,
+# quoting and line breaks. Run `yamlfmt -lint` to check without writing.
+line_ending: lf
+match_type: standard
+extensions:
+  - yml
+  - yaml
+include:
+  - ansible
+  - docker
+  - .github
+exclude:
+  - docker/web/web
+formatter:
+  type: basic
+  indent: 2
+  include_document_start: true
+  retain_line_breaks_single: true
+  pad_line_comments: 1
+  trim_trailing_whitespace: true
+  eof_newline: true

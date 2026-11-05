@@ -1,0 +1,25 @@
+---
+# ansible-lint loads this file too, so both linters agree on style
+extends: default
+
+rules:
+  line-length:
+    max: 100
+    allow-non-breakable-words: true
+  comments:
+    require-starting-space: true
+    min-spaces-from-content: 1
+  indentation:
+    spaces: consistent
+    indent-sequences: consistent
+  # ansible-lint refuses fix mode when its own pass differs
+  comments-indentation: disable
+  braces:
+    max-spaces-inside: 1
+  octal-values:
+    forbid-implicit-octal: true
+    forbid-explicit-octal: true
+  # GitHub Actions uses `on:` as a key, which the YAML 1.1 truthy check flags.
+  truthy:
+    ignore: |
+      .github/

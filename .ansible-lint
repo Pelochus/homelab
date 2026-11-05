@@ -1,0 +1,16 @@
+---
+# run from the repo root: `ansible-lint ansible` (inside ansible/ it reports nothing)
+exclude_paths:
+  - backups/
+  - docker/
+  - img/
+  - logs/
+  - .github/
+
+enable_list:
+  - args
+  - empty-string-compare
+  - no-log-password
+  - no-same-owner
+
+# enable once the tree is otherwise clean: profile: production

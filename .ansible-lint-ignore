@@ -1,0 +1,6 @@
+# Targeted ignores for ansible-lint (read automatically from the repo root).
+# The webpage checkout is a git submodule of this repo, so refreshing it has to
+# go through the git CLI: no Ansible module manages submodules, and the command
+# is idempotent, so these two command-shell rules cannot be satisfied otherwise.
+ansible/roles/deploy/tasks/web.yml command-instead-of-module
+ansible/roles/deploy/tasks/web.yml no-changed-when

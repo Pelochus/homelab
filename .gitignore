@@ -1,14 +1,18 @@
-# Ignore whole docker dir
-docker/
-
-# Except for
-!docker/web/docker-compose.yml
+# docker stack dirs are tracked, their contents are not; compose files are the exception
+docker/*
+!docker/*/
+docker/*/*
+!docker/*/docker-compose.yml
 !docker/web/web
-!docker/media/docker-compose.yml
-!docker/monitoring/docker-compose.yml
-!docker/networking/docker-compose.yml
-!docker/others/docker-compose.yml
-!docker/games/docker-compose.yml
 
 # Ignore logs folder
 logs/
+
+# pi's local task/session state
+.pi/
+
+# ansible-lint cache
+.cache/
+
+# ansible-lint project scaffold
+.ansible/

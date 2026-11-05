@@ -1,0 +1,49 @@
+---
+name: Lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  ansible:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+      # The action installs ansible-lint from the pinned action ref, then runs
+      # `ansible-galaxy install -r <requirements_file>` so the community.docker
+      # FQCNs in the roles resolve instead of being reported as unknown modules.
+      - name: ansible-lint
+        uses: ansible/ansible-lint@main
+        with:
+          args: ansible
+          requirements_file: ansible/requirements.yml
+
+  yaml:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+      - name: Install yamllint
+        run: python3 -m pip install --quiet --upgrade yamllint
+      # Reads .yamllint from the repo root, so it checks the same rules
+      # ansible-lint applies to the playbook YAML.
+      - name: yamllint
+        run: yamllint .
+      # Bump this asset name when yamlfmt releases a new version.
+      # Bump this release tag when yamlfmt ships a new version.
+      - name: yamlfmt
+        run: |
+          asset=https://github.com/google/yamlfmt/releases/download/v0.21.0
+          wget -q "$asset/yamlfmt_0.21.0_Linux_x86_64.tar.gz"
+          tar xzf yamlfmt_0.21.0_Linux_x86_64.tar.gz
+          chmod +x yamlfmt
+          ./yamlfmt -lint
+      # Compose files are not Ansible YAML, so they get their own parser check.
+      - name: docker compose
+        run: |-
+          for compose in docker/*/docker-compose.yml; do
+            docker compose -f "$compose" config > /dev/null
+          done
