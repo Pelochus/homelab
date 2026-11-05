@@ -1,65 +1,62 @@
 ---
-# This Docker compose file includes:
-#   Homarr
-#   Netdata
-#   Grafana TODO: Migrate from Netdata to Grafana, eventually
-
+# Homarr, Beszel (hub + agent)
 services:
   homarr:
     container_name: homarr
     image: ghcr.io/homarr-labs/homarr:latest
+    init: true
     restart: unless-stopped
     environment:
-      - TZ=Europe/Madrid
+      - HOMELAB_TZ=${HOMELAB_TZ:-Europe/Madrid}
       - SECRET_ENCRYPTION_KEY=9fb0446198ef137e6dcb75568f0c9f7266fdd52b9d7a07875767e55beb29d77c
     volumes:
       - ./homarr/appdata:/appdata
-      - /var/run/docker.sock:/var/run/docker.sock # For controlling Docker within Homarr
+      - /var/run/docker.sock:/var/run/docker.sock
     # ports:
     #   - '7575:7575'
     networks:
       homelab:
         ipv4_address: 10.0.1.20
 
-  netdata:
-    container_name: netdata
-    image: netdata/netdata
-    pid: host
-    # network_mode: host # If returning to this setting, no need to add ports setting
+  beszel:
+    container_name: beszel
+    image: henrygd/beszel:latest
+    init: true
     restart: unless-stopped
-    cap_add:
-      - SYS_PTRACE
-      - SYS_ADMIN
-    security_opt:
-      - apparmor:unconfined
+    # healthcheck:
+    #   test: ['CMD', '/beszel', 'health', '--url', 'http://10.0.1.21:8090']
+    #   interval: 120s
+    #   start_period: 10s
+    #   timeout: 5s
+    environment:
+      - APP_URL=${BESZEL_URL:-http://10.0.1.21:8090}
     volumes:
-      - ./netdata/config:/etc/netdata
-      - ./netdata/lib:/var/lib/netdata
-      - ./netdata/cache:/var/cache/netdata
-      - /etc/passwd:/host/etc/passwd:ro
-      - /etc/group:/host/etc/group:ro
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /etc/os-release:/host/etc/os-release:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./beszel/data:/beszel_data
+      - ./beszel/socket:/beszel_socket
     networks:
       homelab:
         ipv4_address: 10.0.1.21
 
-#  grafana:
-#    container_name: grafana
-#    image: grafana/grafana-enterprise
-#    restart: unless-stopped
-#    # if you are running as root then set it to 0
-#    # else find the right id with the id -u command
-#    user: '0'
-#    volumes:
-#      - ./grafana:/var/lib/grafana
-#    ports:
-#      - '3000:3000'
-#    networks:
-#      homelab:
-#        ipv4_address: 10.0.1.22
+  beszel-agent:
+    container_name: beszel-agent
+    image: henrygd/beszel-agent:latest
+    restart: unless-stopped
+    # healthcheck:
+    #   test: ['CMD', '/agent', 'health']
+    #   interval: 120s
+    network_mode: host
+    volumes:
+      - ./beszel/agent:/var/lib/beszel-agent
+      - ./beszel/socket:/beszel_socket
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      LISTEN: /beszel_socket/beszel.sock
+      HUB_URL: ${BESZEL_URL:-http://10.0.1.21:8090}
+      TOKEN: ${BESZEL_TOKEN:-}
+      KEY: "${BESZEL_KEY:-}"
+      # healthcheck:
+      #   test: ['CMD', '/agent', 'health']
+      #   interval: 120s
 
 networks:
   homelab:

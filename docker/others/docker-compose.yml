@@ -4,20 +4,21 @@ services:
   code-server:
     image: lscr.io/linuxserver/code-server:latest
     container_name: code-server
+    init: true
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Madrid
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - HOMELAB_TZ=${HOMELAB_TZ:-Europe/Madrid}
       - PASSWORD= # optional
       - HASHED_PASSWORD= # optional
       - SUDO_PASSWORD= # optional
       - SUDO_PASSWORD_HASH= # optional
-      - PROXY_DOMAIN=code-server.my.domain # optional
-      - DEFAULT_WORKSPACE=/home # optional
+      - PROXY_DOMAIN=${CODE_SERVER_HOST:-code-server.my.domain} # optional
+      - DEFAULT_WORKSPACE=${CODE_SERVER_WORKSPACE:-/home} # optional
     volumes:
       - ./code-server/config:/config
-      - /home/:/home
-      - /media:/media
+      - ${CODE_SERVER_HOME:-/home}:/home
+      - ${MEDIA_ROOT:-/media}:/media
     # ports:
     # - 8443:8443
     restart: unless-stopped
@@ -28,13 +29,14 @@ services:
   pyload-ng:
     image: lscr.io/linuxserver/pyload-ng:latest
     container_name: pyload-ng
+    init: true
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Madrid
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - HOMELAB_TZ=${HOMELAB_TZ:-Europe/Madrid}
     volumes:
       - ./pyload-ng/config:/config
-      - /media/hdd/BolloNAS/Descargas/pyload-ng:/downloads
+      - ${PYLOAD_DIR:-/media/hdd/BolloNAS/Descargas/pyload-ng}:/downloads
     ports:
       # - 8000:8000 # WebUI port
       - 9666:9666 # optional

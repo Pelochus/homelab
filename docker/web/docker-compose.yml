@@ -4,6 +4,7 @@ services:
   web:
     container_name: web
     image: nginx:latest
+    init: true
     # Ports stay closed: the site is reachable only through the reverse proxy.
     # ports:
     #   - "8888:80"
