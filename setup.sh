@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
-#
-# Title: setup.sh
-# Author: Pelochus
-# Version: 1.0
-# Brief: Entry point for the Ansible playbooks that build the homelab.
-#        OS upgrades are unattended, so this script never reboots the host.
+# Entry point for the Ansible playbooks that build the homelab.
+# OS upgrades are unattended: this script never reboots the host.
 
 repo_dir="$(dirname "$(readlink -f "$0")")"
 playbooks_dir="$repo_dir/ansible"

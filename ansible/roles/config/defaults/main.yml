@@ -1,7 +1,7 @@
 ---
 config_bashrc_path: /home/{{ user }}/.bashrc
 
-# OS tooling (not homelab software)
+# OS tooling
 config_syspkgs:
   - eza
   - build-essential
@@ -22,4 +22,4 @@ config_syspkgs:
 
 config_refresh_unit: homelab-refresh
 
-config_refresh_cadence: "*-*-01 04:00" # first of month, 04:00
+config_refresh_cadence: "*-*-01 04:00"

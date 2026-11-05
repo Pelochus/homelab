@@ -1,7 +1,5 @@
 ---
-# yamlfmt (google/yamlfmt) settings: one style for every YAML file here, so
-# Docker Compose, Ansible and the CI workflow all get the same indentation,
-# quoting and line breaks. Run `yamlfmt -lint` to check without writing.
+# one style for ansible, docker, and .github YAML; check with `yamlfmt -lint`
 line_ending: lf
 match_type: standard
 extensions:

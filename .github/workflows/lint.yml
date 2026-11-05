@@ -12,9 +12,7 @@ jobs:
     steps:
       - name: Check out
         uses: actions/checkout@v4
-      # The action installs ansible-lint from the pinned action ref, then runs
-      # `ansible-galaxy install -r <requirements_file>` so the community.docker
-      # FQCNs in the roles resolve instead of being reported as unknown modules.
+      # requirements_file installs community.docker so the role FQCNs resolve
       - name: ansible-lint
         uses: ansible/ansible-lint@main
         with:
@@ -28,12 +26,10 @@ jobs:
         uses: actions/checkout@v4
       - name: Install yamllint
         run: python3 -m pip install --quiet --upgrade yamllint
-      # Reads .yamllint from the repo root, so it checks the same rules
-      # ansible-lint applies to the playbook YAML.
+      # reads .yamllint from the repo root, the rules ansible-lint also applies
       - name: yamllint
         run: yamllint .
-      # Bump this asset name when yamlfmt releases a new version.
-      # Bump this release tag when yamlfmt ships a new version.
+      # yamlfmt release tag and asset name must match
       - name: yamlfmt
         run: |
           asset=https://github.com/google/yamlfmt/releases/download/v0.21.0
@@ -41,7 +37,7 @@ jobs:
           tar xzf yamlfmt_0.21.0_Linux_x86_64.tar.gz
           chmod +x yamlfmt
           ./yamlfmt -lint
-      # Compose files are not Ansible YAML, so they get their own parser check.
+      # compose files are not Ansible YAML
       - name: docker compose
         run: |-
           for compose in docker/*/docker-compose.yml; do

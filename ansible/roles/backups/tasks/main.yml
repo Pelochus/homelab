@@ -1,5 +1,4 @@
 ---
-# stub until the backup strategy is filled in
 - name: Refuse to run the backups stub
   ansible.builtin.assert:
     that:

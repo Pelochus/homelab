@@ -3,7 +3,6 @@ user: pelochus
 
 homelab_root: /home/{{ user }}/homelab
 
-# stacks live in homelab/docker/<name>
 compose_stacks:
   - media
   - monitoring

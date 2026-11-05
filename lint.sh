@@ -1,17 +1,11 @@
 #!/bin/bash
+# Same checks as .github/workflows/lint.yml, on the local box.
 #
-# Title: lint.sh
-# Author: Pelochus
-# Version: 1.0
-# Brief: Runs the same checks as .github/workflows/lint.yml, on the local box
+#   ./lint.sh        check everything, fail on the first problem
+#   ./lint.sh fix    rewrite the YAML files in place
 #
-# Usage:
-#   ./lint.sh        checks everything and fails on the first problem
-#   ./lint.sh fix    rewrites the YAML files in place with the formatter
-#
-# Install: yamllint and ansible-lint are Python packages (pip/uv or the
-# ansible/ansible-lint GitHub Action), yamlfmt is a single Go binary from
-# https://github.com/google/yamlfmt
+# Tools: yamllint and ansible-lint (pip/uv, or the ansible GitHub Action),
+# yamlfmt (https://github.com/google/yamlfmt)
 
 set -e
 
@@ -25,8 +19,7 @@ for tool in ansible-lint yamllint yamlfmt; do
     fi
 done
 
-# ansible-lint finds .ansible-lint at the repo root and derives the project
-# root from it, so it has to run here, not inside ansible/
+# ansible-lint reads .ansible-lint from this directory, so it runs here, not inside ansible/
 ansible-lint ansible
 
 # yamllint reads .yamllint from the working directory

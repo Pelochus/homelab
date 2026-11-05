@@ -1,5 +1,5 @@
 ---
-# homelab software (OS tooling lives in the config role)
+# homelab software
 deploy_packages:
   - git
   - sudo
@@ -12,7 +12,7 @@ deploy_packages:
   - ksmbd-tools
   # - samba
   # - samba-common-bin
-  # - docker.io # Better use the official docker install guide
+  # - docker.io
 
 deploy_samba_conf: /etc/ksmbd/ksmbd.conf
 deploy_samba_user: "{{ user }}"
@@ -20,7 +20,6 @@ deploy_samba_name: BolloNAS
 deploy_samba_share: /media/hdd/BolloNAS
 deploy_samba_template: ksmbd.conf.j2
 
-# the external network every compose stack declares
 deploy_docker_network: homelab
 deploy_docker_subnet: 10.0.1.0/24
 deploy_docker_gateway: 10.0.1.1

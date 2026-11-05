@@ -1,4 +1,3 @@
 ---
-# stub until the strategy is designed; paths are on the host, not in this repo
 backups_paths: []
 backups_dest: ""

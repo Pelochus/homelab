@@ -1,10 +1,5 @@
 ---
-# This Docker compose file includes:
-#   qBittorrent-nox (no GUI, but with webUI)
-#   *Arr (Sonarr, Radarr, Prowlarr)
-#   Jellyfin
-
-# Use docker logs qbittorrent-nox for seeing temporal password on first run
+# first run logs a temporary webUI password
 services:
   qbittorrent-nox:
     container_name: qbittorrent-nox
@@ -20,10 +15,8 @@ services:
       - TZ=${HOMELAB_TZ}
       # - UMASK=022
     ports:
-      # for bittorrent traffic
       - 6881:6881/tcp
       - 6881:6881/udp
-      # for WebUI
       # - 8080:8080/tcp
     read_only: true
     restart: 'unless-stopped'
@@ -40,7 +33,7 @@ services:
         ipv4_address: 10.0.1.30
 
   ####################################################
-  # Arr configuration is extracted from hotio's images
+  # Arr configuration
   ####################################################
 
   prowlarr:
@@ -113,8 +106,8 @@ services:
     container_name: jellyfin
     image: jellyfin/jellyfin:latest
     init: true
-    user: ${JELLYFIN_UID}:${JELLYFIN_GID} # Remember to change using id -u : id -g
-    # network_mode: 'host' # Required for DLNA, incompatible with network settings below
+    user: ${JELLYFIN_UID}:${JELLYFIN_GID}
+    # network_mode: host # DLNA only; conflicts with the networks block below
     volumes:
       - ./jellyfin/config:/config
       - ./jellyfin/cache:/cache
@@ -123,14 +116,13 @@ services:
         target: /media
         # - /path/to/media2:/media2:ro
     restart: 'unless-stopped'
-    # Optional - may be necessary for docker healthcheck to pass if running in host network mode
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    devices: # Allow Intel/AMD HW acceleration
+    devices:
       - /dev/dri/renderD128:/dev/dri/renderD128
       - /dev/dri/card0:/dev/dri/card0
     group_add:
-      - ${RENDER_GID} # Search for render group id with: cat /etc/group | grep render
+      - ${RENDER_GID}
     networks:
       homelab:
         ipv4_address: 10.0.1.34

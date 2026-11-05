@@ -1,5 +1,5 @@
 ---
-# run from the repo root: `ansible-lint ansible` (inside ansible/ it reports nothing)
+# ansible-lint reads .ansible-lint from the current directory: run `ansible-lint ansible` from here
 exclude_paths:
   - backups/
   - docker/
@@ -13,4 +13,4 @@ enable_list:
   - no-log-password
   - no-same-owner
 
-# enable once the tree is otherwise clean: profile: production
+# profile: production
