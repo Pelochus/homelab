@@ -1,0 +1,24 @@
+// Unattended package upgrades. Written by the config role; do not edit on the host.
+
+// Wait for an external lock instead of failing when apt is busy
+DPkg::Lock::Timeout "1200";
+
+// Debian defaults to security-only updates; Ubuntu's defaults already include the
+// suite, so these lines make both distros behave the same way.
+Unattended-Upgrade::Only-Built-In-Security "false";
+Unattended-Upgrade::Allowed-Origins {
+    "${distro} ${codename}";
+    "${distro} ${codename}-security";
+};
+
+// Kernel/glibc updates can require a reboot; never do that silently on a home server
+Unattended-Upgrade::Automatic-Reboot "false";
+
+// Removals stay an explicit, human decision
+Unattended-Upgrade::Remove-Unused-Dependencies "false";
+Unattended-Upgrade::Remove-Unused-Kernel-Packages "false";
+
+// systemd cron cadence: refresh the lists nightly, upgrade at 06:00, announce the delta
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Unattended-Upgrade "1";
+APT::Periodic::Download-Update-Announcements "1";

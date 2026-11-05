@@ -1,8 +1,5 @@
 ---
-- name: Check if rsync is installed
-  apt:
-    name: rsync
-    state: latest
+# personal files worth keeping off-host
 
-- name: Backup important files
-  command: rsync
+# - name: Backup important files
+#   command: rsync -aHAX {{ backups_paths }} {{ backups_dest }}

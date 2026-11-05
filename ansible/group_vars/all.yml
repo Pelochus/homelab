@@ -1,4 +1,16 @@
 ---
 user: pelochus
-# Note, not working right now, using all in every playbook manually
-targets: all # Default hosts target
+
+homelab_root: /home/{{ user }}/homelab
+
+# stacks live in homelab/docker/<name>
+compose_stacks:
+  - media
+  - monitoring
+  - networking
+  - others
+  - web
+
+apt_cache_valid_time_installs: 3600
+
+docker_prune_filter: 240h

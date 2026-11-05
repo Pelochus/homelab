@@ -1,3 +1,12 @@
-- include_tasks: packages.yml
-- include_tasks: web.yml
-- include_tasks: docker.yml
+---
+- name: Install the service packages
+  ansible.builtin.import_tasks: packages.yml
+
+- name: Configure the Samba kernel share
+  ansible.builtin.import_tasks: samba.yml
+
+- name: Refresh the webpage checkout
+  ansible.builtin.import_tasks: web.yml
+
+- name: Set up Docker and deploy the compose stacks
+  ansible.builtin.import_tasks: docker.yml

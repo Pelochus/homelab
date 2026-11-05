@@ -1,0 +1,8 @@
+---
+- name: Create the Samba configuration
+  ansible.builtin.template:
+    src: "{{ deploy_samba_template }}"
+    dest: "{{ deploy_samba_conf }}"
+    mode: "0644"
+  become: true
+  notify: Restart ksmbd

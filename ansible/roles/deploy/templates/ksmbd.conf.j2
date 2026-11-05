@@ -57,11 +57,11 @@
 	vfs objects = 
 	write list = 
 
-[{{ samba_name }}]
-	comment = {{ samba_name }} shared directory
-	path = {{ samba_share }}
+[{{ deploy_samba_name }}]
+	comment = {{ deploy_samba_name }} shared directory
+	path = {{ deploy_samba_share }}
 	readonly = yes
 	create mask = 0775
 	directory mask = 0775
 	public = no
-	write list = {{ samba_user }}
+	write list = {{ deploy_samba_user }}

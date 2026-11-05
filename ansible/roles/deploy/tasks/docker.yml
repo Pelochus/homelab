@@ -1,26 +1,31 @@
 ---
-- name: Check if Docker is installed
-  apt:
-    update_cache: yes
-    cache_valid_time: "{{ apt_max_cache_age_installs }}" # Stricter cache time for installs than updates
-    pkg:
-      # - docker
-      # - docker-compose
-    state: latest
-  notify: Enable Docker
-
 - name: Create Docker Network
   community.docker.docker_network:
-    name: homelab
+    name: "{{ deploy_docker_network }}"
     driver: bridge
     ipam_config:
-      - subnet: 10.0.1.0/24
-        gateway: 10.0.1.1
+      - subnet: "{{ deploy_docker_subnet }}"
+        gateway: "{{ deploy_docker_gateway }}"
+  become: true
 
-# Remember that item is a reserved keyword for loops/with_items
-- name: Deploy containers with Compose
+- name: Add the user to the Docker group
+  ansible.builtin.user:
+    name: "{{ user }}"
+    groups: [docker]
+    append: true
+  become: true
+
+- name: Enable the Docker service
+  ansible.builtin.systemd_service:
+    name: docker
+    state: started
+    enabled: true
+  become: true
+
+# first deploy only; refresh.yml owns image updates
+- name: Deploy Docker containers
   community.docker.docker_compose_v2:
-    project_src: "{{ item }}"
-    pull: always
+    project_src: "{{ homelab_root }}/docker/{{ item }}"
+    pull: missing
     state: present
-  loop: "{{ compose_files }}"
+  loop: "{{ compose_stacks }}"

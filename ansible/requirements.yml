@@ -1,6 +1,4 @@
-# Recommended to run before running any playbook
-
-# NOTE: Could be preinstalled
-# Install Docker module for Ansible
+---
+# install with: ansible-galaxy collection install -r ansible/requirements.yml
 collections:
   - name: community.docker

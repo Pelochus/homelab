@@ -1,9 +1,7 @@
 localhost ansible_connection=local
 
-# Could add more masters in the future
 [master]
 localhost
 
-# Just an example for future use
 # [containers]
 # homarr.local

@@ -1,3 +1,4 @@
 ---
-# Put default paths to backups here
-# NOTE: Use one list for personal and another for config?
+# stub until the strategy is designed; paths are on the host, not in this repo
+backups_paths: []
+backups_dest: ""

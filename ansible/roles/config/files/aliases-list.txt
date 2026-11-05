@@ -2,7 +2,7 @@
 alias c='clear'
 
 # Better ls
-alias ls='exa -laa'
+alias ls='eza -laa'
 
 # Colored ip output
 alias ip='ip -c'

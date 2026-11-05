@@ -1,0 +1,24 @@
+---
+- name: Refresh Docker images
+  hosts: all
+  become: true
+
+  # run monthly by the homelab-refresh timer
+  tasks:
+    - name: Pull images and restart only the containers that changed
+      community.docker.docker_compose_v2:
+        project_src: "{{ homelab_root }}/docker/{{ item }}"
+        pull: "always"
+        state: present
+      loop: "{{ compose_stacks }}"
+
+    - name: Prune images, containers and build cache nobody uses anymore
+      community.docker.docker_prune:
+        containers: true
+        containers_filters:
+          until: "{{ docker_prune_filter }}"
+        images: true
+        images_filters:
+          dangling: false
+          until: "{{ docker_prune_filter }}"
+        builder_cache: true

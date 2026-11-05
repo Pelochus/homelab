@@ -1,8 +1,25 @@
 ---
-bashrc_path: /home/{{ user }}/.bashrc
-maintenance_path: /home/{{ user }}/homelab/ansible/os-maintenance.yml
-syspkgs:
-  eza
-  build-essential
-  net-tools
-  # TODO
+config_bashrc_path: /home/{{ user }}/.bashrc
+
+# OS tooling (not homelab software)
+config_syspkgs:
+  - eza
+  - build-essential
+  - net-tools
+  - unattended-upgrades
+  - traceroute
+  - wget
+  - curl
+  - nano
+  - neovim
+  - htop
+  - btop
+  - lm-sensors
+  - iperf3
+  - speedtest-cli
+  - fastfetch
+  - bleachbit
+
+config_refresh_unit: homelab-refresh
+
+config_refresh_cadence: "*-*-01 04:00" # first of month, 04:00

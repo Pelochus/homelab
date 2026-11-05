@@ -1,6 +1,5 @@
 ---
+# snapshot service-managed state before it is overwritten
+
 # - name: Backup PiVPN
 #   command: pivpn -bk
-
-# TODO: Rest of config backups
-- name: Backup something 

@@ -1,3 +1,14 @@
 ---
-- include_tasks: config.yml
-- include_tasks: personal.yml
+# stub until the backup strategy is filled in
+- name: Refuse to run the backups stub
+  ansible.builtin.assert:
+    that:
+      - backups_paths | length > 0
+      - backups_dest != ""
+    message: Set backups_paths and backups_dest in the backups role defaults first
+
+- name: Snapshot service-managed backup state
+  ansible.builtin.import_tasks: config.yml
+
+- name: Copy personal files off the host
+  ansible.builtin.import_tasks: personal.yml

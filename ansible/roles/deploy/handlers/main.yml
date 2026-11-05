@@ -1,20 +1,5 @@
 ---
-- name: Enable Docker
-  service:
-    name: docker
+- name: Restart ksmbd
+  ansible.builtin.systemd_service:
+    name: ksmbd
     state: restarted
-    enabled: yes
-
-- name: Configure Samba
-  template:
-    src: "{{ samba_template }}"
-    dest: "{{ samba_conf }}"
-    owner: "{{ user }}"
-    group: "{{ user }}"
-  notify: Enable Samba
-
-- name: Enable Samba
-  service:
-    name: ksmbd # smbd if not using kernel Samba
-    stated: restarted
-    enabled: yes
