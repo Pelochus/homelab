@@ -1,0 +1,25 @@
+alias c='clear'
+
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias mkdir='mkdir -p'
+
+alias ls='eza -laa --group-directories-first'
+alias ll='eza -l --group-directories-first --icons --git'
+alias lt='eza -laa --sort modified --group-directories-first'
+alias cat='bat -p'
+alias grep='rg'
+command -v fd >/dev/null && alias find='fd' || alias find='fdfind'
+alias du='dust'
+alias df='duf'
+alias ip='ip -c'
+alias ifconfig='ip -c'
+alias top='btop'
+alias vi='nvim'
+alias vim='nvim'
+
+export EDITOR=nvim
+
+command -v zoxide >/dev/null && eval "$(zoxide init bash)" && alias cd='z'
+command -v fzf >/dev/null && eval "$(fzf --bash)"

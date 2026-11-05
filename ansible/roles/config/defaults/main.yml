@@ -3,9 +3,7 @@ config_bashrc_path: /home/{{ user }}/.bashrc
 
 # OS tooling
 config_syspkgs:
-  - eza
   - build-essential
-  - net-tools
   - unattended-upgrades
   - traceroute
   - wget
@@ -19,6 +17,18 @@ config_syspkgs:
   - speedtest-cli
   - fastfetch
   - bleachbit
+
+  # modern coreutils replacements
+  - eza
+  - bat
+  - ripgrep
+  - fd-find
+  - zoxide
+  - duf
+  - ncdu
+  - pv
+  - fzf
+  - du-dust
 
 config_refresh_unit: homelab-refresh
 

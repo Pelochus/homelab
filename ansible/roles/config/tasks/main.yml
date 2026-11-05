@@ -1,7 +1,7 @@
 ---
-- name: Add aliases to .bashrc
+- name: Add the shell block to .bashrc
   vars:
-    aliases_file: "{{ role_path }}/files/aliases-list.txt"
+    aliases_file: "{{ role_path }}/files/bashrc-block.txt"
   ansible.builtin.blockinfile:
     path: "{{ config_bashrc_path }}"
     marker: "# {mark} Ansible managed aliases block"
