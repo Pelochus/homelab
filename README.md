@@ -23,6 +23,9 @@ More info about this repo in the [wiki](https://github.com/Pelochus/homelab/wiki
 - Backups strategy
 - Technical information about Ansible automation and Docker containers used
 
+Conventions for working in this repo (design rules, commit style, what is verifiable
+where): `AGENTS.md`.
+
 ## TODO:
 - Think of backups automation (Rsync + Bash or Ansible)
 - Some CI/CD and GitOps (i.e.: auto deploy webserver on git push)
