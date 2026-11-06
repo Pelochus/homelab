@@ -1,0 +1,5 @@
+---
+# per-node overrides for the master node
+# backups_paths:
+#   - "{{ homelab_root }}/docker"
+# backups_dest: /mnt/nvme/BolloNAS/backups

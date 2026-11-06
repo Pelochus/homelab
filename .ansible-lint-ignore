@@ -1,3 +1,2 @@
 # submodule refresh has no Ansible module; the git CLI call is idempotent
 ansible/roles/deploy/tasks/web.yml command-instead-of-module
-ansible/roles/deploy/tasks/web.yml no-changed-when

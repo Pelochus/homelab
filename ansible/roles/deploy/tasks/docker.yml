@@ -1,4 +1,15 @@
 ---
+# docker itself is installed per-OS, never by this repo (docker.io on Ubuntu, docker on Arch)
+- name: Notice that Docker has to be installed per-OS
+  ansible.builtin.shell:
+    cmd: |
+      command -v docker || {
+          echo "Docker is not installed; this repo does not install it." >&2
+          echo "Install it per-OS first: docker.io on Ubuntu, docker on Arch." >&2
+          exit 1
+      }
+  changed_when: false
+
 - name: Create Docker Network
   community.docker.docker_network:
     name: "{{ deploy_docker_network }}"
@@ -29,3 +40,11 @@
     pull: missing
     state: present
   loop: "{{ compose_stacks }}"
+
+# docker creates the bind dirs root-owned, so the services cannot write into them
+- name: Own the compose state dirs of each stack
+  ansible.builtin.command:
+    cmd: chown -R {{ user }}:{{ user }} {{ homelab_root }}/docker/{{ item }}
+  loop: "{{ compose_stacks }}"
+  become: true
+  changed_when: false

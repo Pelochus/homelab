@@ -1,10 +1,11 @@
 ---
+# stub: no backup task copies state yet, this assert is what refuses the run
 - name: Refuse to run the backups stub
   ansible.builtin.assert:
     that:
       - backups_paths | length > 0
       - backups_dest != ""
-    message: Set backups_paths and backups_dest in the backups role defaults first
+    fail_msg: Set backups_paths and backups_dest in group_vars/master.yml first
 
 - name: Snapshot service-managed backup state
   ansible.builtin.import_tasks: config.yml
