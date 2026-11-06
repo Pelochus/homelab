@@ -7,5 +7,6 @@ Documentation=file://{{ homelab_root }}/ansible/docker-refresh.yml
 Type=simple
 WorkingDirectory={{ homelab_root }}/ansible
 # systemd looks ExecStart up by absolute path, not through PATH.
-ExecStart=/usr/bin/ansible-playbook docker-refresh.yml
+# %% is systemd's literal %: one stamped log per run, in the gitignored logs dir
+ExecStart=/bin/sh -c '/usr/bin/ansible-playbook docker-refresh.yml >> "{{ homelab_root }}/logs/docker-refresh-$(date +%%Y%%m%%d-%%H%%M).log" 2>&1'
 TimeoutStartSec=1800

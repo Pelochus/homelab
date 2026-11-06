@@ -1,4 +1,11 @@
 ---
+- name: Create the refresh log dir
+  ansible.builtin.file:
+    path: "{{ homelab_root }}/logs"
+    state: directory
+    mode: "0755"
+  become: true
+
 - name: Install the refresh service unit
   ansible.builtin.template:
     src: "{{ config_refresh_unit }}.service.j2"
