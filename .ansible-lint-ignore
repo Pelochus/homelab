@@ -1,2 +1,4 @@
 # submodule refresh has no Ansible module; the git CLI call is idempotent
 ansible/roles/deploy/tasks/web.yml command-instead-of-module
+# the bare form would pass the literal name, not the value
+ansible/docker-refresh.yml jinja[spacing]
