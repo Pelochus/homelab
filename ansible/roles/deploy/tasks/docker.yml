@@ -33,7 +33,7 @@
     enabled: true
   become: true
 
-# first deploy only; refresh.yml owns image updates
+# first deploy only; docker-refresh.yml owns image updates
 - name: Deploy Docker containers
   community.docker.docker_compose_v2:
     project_src: "{{ homelab_root }}/docker/{{ item }}"

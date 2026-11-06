@@ -76,7 +76,7 @@ in this repo, not a new repo and not a playbook that branches.
 | Path | Role |
 | --- | --- |
 | `ansible/` | roles (`config`, `deploy`, `backups`), `hosts`, `group_vars/all.yml`, `requirements.yml` |
-| `ansible/*.yml` | the entry playbooks: `software-deploy`, `os-config`, `refresh`, `backup` |
+| `ansible/*.yml` | the entry playbooks: `software-deploy`, `os-config`, `docker-refresh`, `backup` |
 | `docker/<stack>/` | one compose stack per service group: `media`, `monitoring`, `networking`, `others`, `web` |
 | `docker/<stack>/.env` | node facts for that stack, tracked; `docker/monitoring/.env` is gitignored |
 | `docker/web/web/` | submodule → the `web` repo; the served tree is `site/`, mount that, never the checkout root |

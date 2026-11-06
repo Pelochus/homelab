@@ -51,7 +51,7 @@ case "${1:-}" in
         run_playbook software-deploy.yml
         ;;
     --refresh)
-        run_playbook refresh.yml
+        run_playbook docker-refresh.yml
         ;;
     "")
         while true; do
@@ -66,7 +66,7 @@ case "${1:-}" in
             case "$choice" in
                 1) run_playbooks os-config.yml ;;
                 2) run_playbooks software-deploy.yml ;;
-                3) run_playbooks refresh.yml ;;
+                3) run_playbooks docker-refresh.yml ;;
                 4) run_playbooks backup.yml ;;
                 5) break ;;
                 *) echo "Not a choice." ;;
