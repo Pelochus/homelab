@@ -28,22 +28,16 @@ Conventions for working in this repo (design rules, commit style, what is verifi
 where): `AGENTS.md`.
 
 ## Secrets
-Secrets are not in tracked files. A stack that needs one reads a gitignored
-`docker/<stack>/.secrets.env` through `env_file`; the tracked `docker/<stack>/.env`
-holds node facts only.
-A credential is committed only as a one-way hash, never as ciphertext keyed by the
-repo — a public repo cannot hold a recoverable secret.
+Secrets live in the gitignored `docker/<stack>/.secrets.env`, read through `env_file`;
+node facts live in the tracked `docker/<stack>/.env`. A credential that must survive a
+redeploy is tracked as a one-way hash.
 
-- code-server login: `CODE_SERVER_HASHED_PASSWORD` in the tracked `docker/others/.env`,
-  an argon2 hash (`HASHED_PASSWORD` wins over `PASSWORD`; code-server verifies argon2
-  only, a bcrypt hash is rejected). Generate it with
-  `echo -n 'password' | argon2 "$(openssl rand -hex 8)" -e -i` (`argon2` is in Arch's
-  extra repo) and double every `$` before writing it in — compose interpolates `$`
-  inside values substituted from a `.env`, and an unescaped hash arrives mangled.
-- Homarr `SECRET_ENCRYPTION_KEY`, Beszel `BESZEL_TOKEN`: `openssl rand -hex 16`,
-  regenerated per node, never stored.
-- Beszel `BESZEL_KEY`: the Beszel hub prints it on its first run; paste it into the
-  gitignored `.secrets.env`, the agent cannot authenticate without it.
+- `docker/others/.env`: `CODE_SERVER_HASHED_PASSWORD` — argon2 only, bcrypt rejected,
+  `echo -n 'password' | argon2 "$(openssl rand -hex 8)" -e -i`, every `$` doubled
+  (compose interpolates `$` in `.env` values)
+- `docker/monitoring/.secrets.env`: `SECRET_ENCRYPTION_KEY` — `openssl rand -hex 32`,
+  64 hex characters; `TOKEN` and `KEY` — from the Beszel hub: Settings → tokens, and the
+  system's SSH public key
 
 ## TODO:
 - Think of backups automation (Rsync + Bash or Ansible)
