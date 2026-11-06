@@ -83,8 +83,8 @@ in this repo, not a new repo and not a playbook that branches.
 | `docker/<stack>/.secrets.env` | secrets for that stack, gitignored, read through `env_file` |
 | `docker/web/web/` | submodule → the `web` repo; the served tree is `site/`, mount that, never the checkout root |
 | `backups/configs/` | saved node state (`configs-*.zip`) + its README |
-| `lint.sh`, `setup.sh` | local mirror of CI; first-run bootstrap on a fresh node |
-| `.yamllint`, `.ansible-lint`, `.ansible-lint-ignore`, `.yamlfmt`, `.gitattributes` | the linters' own configs, at the **repo root** (discovery is working-directory based — see §5) |
+| `lint.sh`, `setup.sh`, `secrets.sh` | local mirror of CI; first-run bootstrap on a fresh node; writes the gitignored stack secrets once |
+| `.yamllint`, `.ansible-lint`, `.ansible-lint-ignore`, `.gitattributes` | the linters' own configs, at the **repo root** (discovery is working-directory based — see §5) |
 | `img/`, `logs/` | screenshots and saved logs (`logs/` gitignored) |
 
 ## 5. Verification
@@ -140,6 +140,8 @@ in this repo, not a new repo and not a playbook that branches.
 - `README.md` is the roadmap (its TODO lists) and the public description — update it
   when conventions or layout change.
 - Long-form documentation lives on the GitHub wiki (hardware, OS, services, backups,
-  ansible); there is no `ansible/README.md` or `docker/README.md`.
+  ansible); there is no `ansible/README.md` or `docker/README.md`. The wiki's own git
+  sidecar is checked out at `~/.cache/pi-wiki/wiki`: edit and commit there, and say that
+  its `git push` is still owed.
 - `backups/configs/README.md` states what state is saved on the node and when.
 - Update this file whenever a convention changes.

@@ -3,9 +3,6 @@ Personal home server configuration and automation. I use this repo as a reminder
 
 ## Short Term TODO:
 Adding it here to force myself to do as soon as possible:
-- Clean up the [wiki](https://github.com/Pelochus/homelab/wiki): stale service and OS
-  references left in the pages (Readarr, Pi-Hole, the fstab mount that unattended-upgrades
-  replaced)
 - Add AI node info (BC250)
 - Consider Ansible split per device type (install what is needed on BC250 node differently from N100)
 
@@ -30,7 +27,8 @@ where): `AGENTS.md`.
 ## Secrets
 Secrets live in the gitignored `docker/<stack>/.secrets.env`, read through `env_file`;
 node facts live in the tracked `docker/<stack>/.env`. A credential that must survive a
-redeploy is tracked as a one-way hash.
+redeploy is tracked as a one-way hash. `./secrets.sh` writes the generated ones and
+`setup.sh` runs it when the file is missing.
 
 - `docker/others/.env`: `CODE_SERVER_HASHED_PASSWORD` — argon2 only, bcrypt rejected,
   `echo -n 'password' | argon2 "$(openssl rand -hex 8)" -e -i`, every `$` doubled
