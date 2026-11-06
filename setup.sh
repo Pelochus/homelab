@@ -21,10 +21,9 @@ usage() {
     echo "Playbooks are idempotent and safe to re-run."
 }
 
-run_playbook() {
-    local playbook="$1"
-    echo "--> ansible-playbook $playbook"
-    ansible-playbook -K "$playbook"
+run_playbooks() {
+    echo "--> ansible-playbook $*"
+    ansible-playbook -K "$@"
 }
 
 ########
@@ -34,6 +33,11 @@ run_playbook() {
 if ! command -v ansible-playbook >/dev/null; then
     echo "Ansible is not installed; installing it now."
     sudo apt install ansible -y
+fi
+
+if ! ansible-galaxy collection list 2>/dev/null | grep -q 'community\.docker'; then
+    echo "Installing the Ansible collections this repo needs."
+    ansible-galaxy collection install -r "$playbooks_dir/requirements.yml"
 fi
 
 cd "$playbooks_dir" || exit 1
@@ -60,10 +64,10 @@ case "${1:-}" in
             echo
             read -r -p "Choose: " choice
             case "$choice" in
-                1) run_playbook os-config.yml ;;
-                2) run_playbook software-deploy.yml ;;
-                3) run_playbook refresh.yml ;;
-                4) run_playbook backup.yml ;;
+                1) run_playbooks os-config.yml ;;
+                2) run_playbooks software-deploy.yml ;;
+                3) run_playbooks refresh.yml ;;
+                4) run_playbooks backup.yml ;;
                 5) break ;;
                 *) echo "Not a choice." ;;
             esac
