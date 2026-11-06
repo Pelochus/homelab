@@ -6,29 +6,35 @@ per service group), `docker/web/web` (submodule of the personal page), `backups/
 
 ## 1. Design
 
-- **Simple and minimal beats capable.** Prefer the service that is cheap to set up,
-  cheap to run, and light on RAM over the one that does more: `beszel` over `netdata`,
-  `wg-easy` over a hand-rolled OVPN/iptables setup. When a lighter tool covers the
-  need, switch to it and delete the heavier one.
-- **Fewer moving parts per layer.** One `style` of setup across a stack, no parallel
-  ways to do the same thing (no shell script *and* an ansible task doing one job).
-  If a layer is only kept as a fallback, say so in its README.
-- **Security over convenience.** Secrets never live in tracked files: node facts go
-  in a tracked per-stack `docker/<stack>/.env`, secrets go in a gitignored one
-  (`.gitignore` re-ignores `docker/monitoring/.env`). A credential that must survive a
-  from-scratch redeploy is committed only as a one-way hash (`CODE_SERVER_HASHED_PASSWORD`
-  is argon2), never as ciphertext keyed by something in the repo. Unattended system upgrades
-  are the OS layer, not an ansible task. Every container gets `init: true` unless it
-  shares the host PID namespace.
-- **Images track upstream.** Every image carries an explicit `:latest`, never a pin
-  and never a bare tag: upstream drift is accepted the way `apt upgrade` is accepted,
-  and the monthly refresh repairs a bad release.
-- **Anything that can drift should be a variable.** Hardcoded paths, ports, uids,
-  package lists, and per-node facts belong in `group_vars`, a compose `.env`, or a
-  `${VAR:-default}` in the compose file, not inside a task or a literal line. The
-  names in use — `homelab_root`, `user`, `compose_stacks`, `docker_prune_filter`,
-  `deploy_samba_share`, `config_syspkgs`, `backups_paths`, `HOMELAB_TZ`, `MEDIA_ROOT`,
-  `WG_HOST` — are the names to reuse, not to duplicate.
+- **Simple and minimal beats capable.** Prefer what is cheap to set up, cheap to run
+  and light on RAM over what does more: `beszel` over `netdata`, `wg-easy` over a
+  hand-rolled OVPN/iptables setup. When a lighter tool covers the need, switch to it
+  and delete the heavier one.
+- **One way to do a thing per layer.** No shell script *and* an ansible task for one
+  job. A layer kept only as a fallback says so in its README.
+- **Security over convenience**, as defaults:
+  - Secrets never live in tracked files: node facts go in the tracked
+    `docker/<stack>/.env`, secrets in the gitignored `docker/<stack>/.secrets.env`.
+  - A credential that must survive a from-scratch redeploy is committed as a one-way
+    hash (`CODE_SERVER_HASHED_PASSWORD` is argon2), never as ciphertext keyed by
+    something in the repo.
+  - Unattended system upgrades are the OS layer, not an ansible task.
+  - Every container gets `init: true` unless it shares the host PID namespace.
+- **Rules are defaults, not a contract.** When one fights a case, break it and say why
+  at the place it breaks — a one-line comment, or the README. A short note that carries
+  a fact is worth keeping even where a style rule would seem to forbid it: what a stub
+  is for, why a layer is only a fallback, a vendor quirk, a value that was chosen over
+  a better-looking one.
+- **Images track upstream.** Every image carries an explicit `:latest` — never a pin,
+  never a bare tag. Upstream drift is accepted the way `apt upgrade` is, and the
+  monthly refresh repairs a bad release.
+- **Anything that can drift is a variable** — paths, ports, uids, package lists,
+  per-node facts go in `group_vars`, a compose `.env`, or `${VAR:-default}`, not inside
+  a task or a literal line. Reuse the names already in use (`homelab_root`, `user`,
+  `compose_stacks`, `docker_prune_filter`, `config_syspkgs`, `backups_paths`,
+  `HOMELAB_TZ`, `MEDIA_ROOT`, `WG_HOST`) rather than adding near-duplicates.
+  A compose `ipv4_address:` may stay a literal until it earns a name; name it once
+  another node would have to change it (`ADGUARD_IPV4`).
 
 ## 2. Think long-term and extensible
 
@@ -38,7 +44,7 @@ in this repo, not a new repo and not a playbook that branches.
 
 - Node facts live in `group_vars`, not in roles: `ansible/group_vars/all.yml` for
   shared values, one file per group for per-node overrides. A role that hardcodes a
-  path, a uid, or a host name cannot serve a second node.
+  path, a uid or a host name cannot serve a second node.
 - Keep roles small and composable; a per-node playbook opts into the roles it needs.
 - One compose stack per service group (`docker/<stack>/docker-compose.yml`) so a node
   runs a subset; the stack names live in `ansible/group_vars/all.yml:compose_stacks`,
@@ -49,27 +55,22 @@ in this repo, not a new repo and not a playbook that branches.
 
 ## 3. Style — code and docs
 
-- **Self-documenting first.** Descriptive names, small units, obvious structure:
-  `docker_prune_filter`, `apt_cache_valid_time_installs`, `config_refresh_cadence`.
-- **One-line comments**, only where the "why" is unreadable from the file itself: an
-  unsafe or fragile contract, a vendor quirk, a marshalling rule, a non-obvious
-  constant.
-- **Allowed:** separator banners that delimit groups inside a file (`End of Arr
-  configuration`), and commented-out options that record a knob this host does not
-  use (`# - samba`, `# - 51821:51821/tcp`, `# OnUnitActiveSec=2weeks`). Keep them next
-  to the live block they belong to; they are switchable settings, not dead code.
-- **Not allowed:** prose about the code — narrated blocks, step-by-step narration,
-  restating what the line already says, how-to instructions, references to other files.
-- **Docs carry the narrative** and are scanned, not studied: short lines, plain
-  wording, no storytelling about how a trick works. Long-form docs live on the GitHub
-  wiki; in-repo docs are `README.md` and `backups/configs/README.md`. A doc states
-  facts and rules, never the rationale for a setting — that lives with the setting.
-- **No metatext.** Comments, docs, and commit messages state facts and rules, never
-  commentary about decisions, plans, discoveries, or who found what. "planned",
-  "not yet", "as discussed above", "the linter caught this" are metatext: delete the
-  note, keep the fact it carries.
-- A design note that would otherwise sit in a comment goes in a README; the code stays
-  bare.
+- **Self-documenting first.** Descriptive names, small units, obvious structure
+  (`docker_prune_filter`, `apt_cache_valid_time_installs`, `config_refresh_cadence`).
+- **Comments are one line**, and only where the "why" cannot be read from the file
+  itself: an unsafe or fragile contract, a vendor quirk, a marshalling rule, a
+  non-obvious constant, what a stub is for, why a layer is only a fallback.
+- **Switchable settings stay in code**: separator banners inside a file
+  (`End of Arr configuration`), and commented-out knobs this host does not use
+  (`# - samba`, `# - 51821:51821/tcp`, `# OnUnitActiveSec=2weeks`). Keep them beside the
+  live block — they are settings, not dead code.
+- **No narration.** Comments, docs and commit messages state facts and rules, never
+  decisions, plans, discoveries, or who found what. Drop "planned", "not yet",
+  "as discussed above", "the linter caught this"; keep the fact the note carried.
+- **Docs are scanned, not studied**: short lines, plain wording, no storytelling about
+  how a trick works. A doc states facts and rules; the rationale for a setting lives
+  with the setting. Long-form docs live on the GitHub wiki; in-repo docs are
+  `README.md` and `backups/configs/README.md`.
 
 ## 4. Layout
 
@@ -78,7 +79,8 @@ in this repo, not a new repo and not a playbook that branches.
 | `ansible/` | roles (`config`, `deploy`, `backups`), `hosts`, `group_vars/all.yml`, `requirements.yml` |
 | `ansible/*.yml` | the entry playbooks: `software-deploy`, `os-config`, `docker-refresh`, `backup` |
 | `docker/<stack>/` | one compose stack per service group: `media`, `monitoring`, `networking`, `others`, `web` |
-| `docker/<stack>/.env` | node facts for that stack, tracked; `docker/monitoring/.env` is gitignored |
+| `docker/<stack>/.env` | node facts for that stack, tracked |
+| `docker/<stack>/.secrets.env` | secrets for that stack, gitignored, read through `env_file` |
 | `docker/web/web/` | submodule → the `web` repo; the served tree is `site/`, mount that, never the checkout root |
 | `backups/configs/` | saved node state (`configs-*.zip`) + its README |
 | `lint.sh`, `setup.sh` | local mirror of CI; first-run bootstrap on a fresh node |
@@ -106,15 +108,17 @@ in this repo, not a new repo and not a playbook that branches.
   `git reset --soft <parent>` plus one commit for a run at the tip. No trail of
   "fix", "typo", "also" commits.
 - Subject: imperative, `Area: what changed`, `Area` one of Ansible | Docker | Docs |
-  CI | Submodules | Config | Scripts.
+  CI | Submodules | Config | Scripts | Clean.
 - Body optional, bullets-only, usually absent. Never narrate the process.
+- The remote carries `V1`, `V2`, `isew` as backup branches: never delete them, never
+  force-push over them.
 - Never `git push` unless explicitly asked; every other git operation is allowed.
 
 ## 7. Gotchas that will bite again
 
 - `.gitignore` tracks the stack dirs, their `docker-compose.yml` and their `.env`, and
-  ignores everything else inside them: a new stack's compose file is addable straight
-  away, its state dirs stay untracked.
+  ignores everything else inside them, `docker/*/.secrets.env` included: a new stack's
+  compose file is addable straight away, its state dirs stay untracked.
 - `logs/`, `.pi/`, `.cache/`, `.ansible/` are ignored; do not re-add generated state.
 - `git submodule update` checks out the **pinned** sha, and the pin follows `main` only
   when moved deliberately: pushing the `web` repo never reaches the node by itself.

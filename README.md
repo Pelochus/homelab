@@ -3,8 +3,9 @@ Personal home server configuration and automation. I use this repo as a reminder
 
 ## Short Term TODO:
 Adding it here to force myself to do as soon as possible:
-- Update docs (remove stale references like Readarr, simplify docs)
-- Overall improvements, to, for example, Ansible (example: see new fstab setting to avoid maintenance mode, that kind of minor QoL improvements)
+- Clean up the [wiki](https://github.com/Pelochus/homelab/wiki): stale service and OS
+  references left in the pages (Readarr, Pi-Hole, the fstab mount that unattended-upgrades
+  replaced)
 - Add AI node info (BC250)
 - Consider Ansible split per device type (install what is needed on BC250 node differently from N100)
 
@@ -28,7 +29,8 @@ where): `AGENTS.md`.
 
 ## Secrets
 Secrets are not in tracked files. A stack that needs one reads a gitignored
-`docker/<stack>/.env`; the committed `docker/<stack>/.env` holds node facts only.
+`docker/<stack>/.secrets.env` through `env_file`; the tracked `docker/<stack>/.env`
+holds node facts only.
 A credential is committed only as a one-way hash, never as ciphertext keyed by the
 repo — a public repo cannot hold a recoverable secret.
 
@@ -41,7 +43,7 @@ repo — a public repo cannot hold a recoverable secret.
 - Homarr `SECRET_ENCRYPTION_KEY`, Beszel `BESZEL_TOKEN`: `openssl rand -hex 16`,
   regenerated per node, never stored.
 - Beszel `BESZEL_KEY`: the Beszel hub prints it on its first run; paste it into the
-  gitignored `.env`, the agent cannot authenticate without it.
+  gitignored `.secrets.env`, the agent cannot authenticate without it.
 
 ## TODO:
 - Think of backups automation (Rsync + Bash or Ansible)
