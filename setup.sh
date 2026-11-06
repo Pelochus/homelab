@@ -40,6 +40,9 @@ if ! ansible-galaxy collection list 2>/dev/null | grep -q 'community\.docker'; t
     ansible-galaxy collection install -r "$playbooks_dir/requirements.yml"
 fi
 
+# gitignored stack secrets, no-op once the file exists
+"$repo_dir/secrets.sh"
+
 cd "$playbooks_dir" || exit 1
 
 case "${1:-}" in
@@ -47,11 +50,11 @@ case "${1:-}" in
         usage
         ;;
     -a|--auto)
-        run_playbook os-config.yml
-        run_playbook software-deploy.yml
+        run_playbooks os-config.yml
+        run_playbooks software-deploy.yml
         ;;
     --refresh)
-        run_playbook docker-refresh.yml
+        run_playbooks docker-refresh.yml
         ;;
     "")
         while true; do
