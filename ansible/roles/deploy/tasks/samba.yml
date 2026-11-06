@@ -6,3 +6,11 @@
     mode: "0644"
   become: true
   notify: Restart ksmbd
+
+# the conf alone leaves the share dead: ksmbd.service has to be enabled and started too
+- name: Run the ksmbd share service
+  ansible.builtin.systemd_service:
+    name: ksmbd
+    state: started
+    enabled: true
+  become: true
