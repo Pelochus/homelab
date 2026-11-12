@@ -13,10 +13,28 @@ config_syspkgs:
   - htop
   - btop
   - lm-sensors
+  - smartmontools
   - watchdog
   - iperf3
   - fastfetch
+  - intel-opencl-icd
   - bleachbit
+
+  - jq
+  - lsof
+  - sysstat
+  - iotop
+  - dnsutils
+  - tmux
+  - zip
+  - unzip
+
+  # switchable: uncomment when a node needs them
+  # - tcpdump
+  # - netcat-openbsd
+  # - cifs-utils
+  # - hdparm
+  # - pigz
 
   # modern coreutils replacements
   - eza
