@@ -4,7 +4,6 @@ services:
   code-server:
     image: lscr.io/linuxserver/code-server:latest
     container_name: code-server
-    init: true
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -25,7 +24,6 @@ services:
   pyload-ng:
     image: lscr.io/linuxserver/pyload-ng:latest
     container_name: pyload-ng
-    init: true
     environment:
       - PUID=${PUID}
       - PGID=${PGID}

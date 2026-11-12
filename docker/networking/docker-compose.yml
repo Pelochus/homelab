@@ -4,7 +4,6 @@ services:
   nginx-proxy:
     container_name: nginx-proxy
     image: 'jc21/nginx-proxy-manager:latest'
-    init: true
     restart: unless-stopped
     environment:
       - TZ=${HOMELAB_TZ}

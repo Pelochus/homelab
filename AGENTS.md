@@ -19,7 +19,7 @@ per service group), `docker/web/web` (submodule of the personal page), `backups/
     hash (`CODE_SERVER_HASHED_PASSWORD` is argon2), never as ciphertext keyed by
     something in the repo.
   - Unattended system upgrades are the OS layer, not an ansible task.
-  - Every container gets `init: true` unless it shares the host PID namespace.
+  - Every container gets `init: true` unless it shares the host PID namespace or its image owns `/init` (s6-overlay refuses to run outside pid 1).
 - **Rules are defaults, not a contract.** When one fights a case, break it and say why
   at the place it breaks — a one-line comment, or the README. A short note that carries
   a fact is worth keeping even where a style rule would seem to forbid it: what a stub

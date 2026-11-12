@@ -39,7 +39,6 @@ services:
   prowlarr:
     container_name: prowlarr
     image: ghcr.io/hotio/prowlarr:latest
-    init: true
     # ports:
     # - "9696:9696"
     environment:
@@ -57,7 +56,6 @@ services:
   radarr:
     container_name: radarr
     image: ghcr.io/hotio/radarr:latest
-    init: true
     # ports:
     #   - "7878:7878"
     environment:
@@ -79,7 +77,6 @@ services:
   sonarr:
     container_name: sonarr
     image: ghcr.io/hotio/sonarr:latest
-    init: true
     # ports:
     #   - "8989:8989"
     environment:
