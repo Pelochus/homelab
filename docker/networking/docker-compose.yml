@@ -6,16 +6,14 @@ services:
     image: 'jc21/nginx-proxy-manager:latest'
     init: true
     restart: unless-stopped
+    environment:
+      - TZ=${HOMELAB_TZ}
     ports:
       - '80:80'
       # - '81:81' # WebUI port
       - '443:443'
     volumes:
-      # All routing state (upstreams, domains, redirects, ACME certs) lives in
-      # these two dirs, not in this file: they are untracked and get backed up
-      # in the encrypted config zip (see backups/configs/README.md), never
-      # committed. A fresh clone therefore starts with a proxy that routes
-      # nowhere until the UI state is restored or rebuilt.
+      # routing state lives here, not in this file
       - ./nginx/data:/data
       - ./nginx/letsencrypt:/etc/letsencrypt
     networks:
@@ -27,32 +25,30 @@ services:
     container_name: adguard
     init: true
     restart: unless-stopped
+    environment:
+      - TZ=${HOMELAB_TZ}
     # network_mode: host
     ports:
-      - 53:53/tcp # plain dns over tcp
-      - 53:53/udp # plain dns over udp
+      - 53:53/tcp
+      - 53:53/udp
       # - 88:80/tcp # http web interface
       # - 3000:3000/tcp # initial setup web interface
     volumes:
-      - ./adguard/config:/opt/adguardhome/conf # app configuration
-      - ./adguard/work:/opt/adguardhome/work # app working directory
+      - ./adguard/config:/opt/adguardhome/conf
+      - ./adguard/work:/opt/adguardhome/work
     networks:
       homelab:
-        ipv4_address: ${ADGUARD_IPV4:-10.0.1.11}
+        ipv4_address: ${ADGUARD_IPV4}
 
   wg-easy:
     environment:
-      # Change Language:
-      # (Supports: en, ua, ru, tr, no, pl, fr, de, ca, es, ko, vi, nl, is, pt, chs, cht, it, th, hi)
       - LANG=en
-      # REQUIRED: Change this to your host's public address
-      - WG_HOST=${WG_HOST:-pelochus.duckdns.org}
-
-      # Optional:
+      - TZ=${HOMELAB_TZ}
+      - WG_HOST=${WG_HOST:?wg-easy needs a public host name to hand out}
       # - PASSWORD=foobar123
       # - WG_PORT=51820
       # - WG_DEFAULT_ADDRESS=10.8.0.x
-      - WG_DEFAULT_DNS=${ADGUARD_IPV4:-10.0.1.11} # adguard container, see adguardhome above
+      - WG_DEFAULT_DNS=${ADGUARD_IPV4}
       # - WG_MTU=1420
       # - WG_ALLOWED_IPS=192.168.15.0/24, 10.0.1.0/24
       # - WG_PERSISTENT_KEEPALIVE=25
@@ -61,8 +57,7 @@ services:
       # - WG_PRE_DOWN=echo "Pre Down" > /etc/wireguard/pre-down.txt
       # - WG_POST_DOWN=echo "Post Down" > /etc/wireguard/post-down.txt
       # - UI_TRAFFIC_STATS=true
-      # - UI_CHART_TYPE=0 # (0 Charts disabled, 1 # Line chart, 2 # Area chart, 3 # Bar chart)
-
+      # - UI_CHART_TYPE=0
     image: ghcr.io/wg-easy/wg-easy:latest
     container_name: wg-easy
     init: true

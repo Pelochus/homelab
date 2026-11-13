@@ -1,18 +1,15 @@
-# docker stack dirs are tracked, their contents are not; compose files are the exception
+# docker stacks tracked, their state dirs not; compose files and .env are the exception
 docker/*
 !docker/*/
 docker/*/*
 !docker/*/docker-compose.yml
+!docker/*/.env
+# secrets per stack, never tracked
+docker/*/.secrets.env
 !docker/web/web
 
-# Ignore logs folder
+# logs and tool state
 logs/
-
-# pi's local task/session state
 .pi/
-
-# ansible-lint cache
 .cache/
-
-# ansible-lint project scaffold
 .ansible/

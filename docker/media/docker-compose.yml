@@ -17,7 +17,7 @@ services:
       - QBT_EULA=accept
       - QBT_VERSION=latest
       - QBT_WEBUI_PORT=8080
-      - HOMELAB_TZ=${HOMELAB_TZ:-Europe/Madrid}
+      - TZ=${HOMELAB_TZ}
       # - UMASK=022
     ports:
       # for bittorrent traffic
@@ -33,8 +33,8 @@ services:
     tty: true
     volumes:
       - ./qbittorrent/config:/config
-      - ${TORRENT_DIR:-/media/hdd/BolloNAS/Torrents}:/downloads
-      - ${MEDIA_ROOT:-/media}:/media
+      - ${TORRENT_DIR}:/downloads
+      - ${MEDIA_ROOT}:/media
     networks:
       homelab:
         ipv4_address: 10.0.1.30
@@ -50,10 +50,10 @@ services:
     # ports:
     # - "9696:9696"
     environment:
-      - PUID=${PUID:-1000}
-      - PGID=${PGID:-1000}
+      - PUID=${PUID}
+      - PGID=${PGID}
       - UMASK=002
-      - HOMELAB_TZ=${HOMELAB_TZ:-Europe/Madrid}
+      - TZ=${HOMELAB_TZ}
     volumes:
       - ./prowlarr/config:/config
     restart: 'unless-stopped'
@@ -68,14 +68,14 @@ services:
     # ports:
     #   - "7878:7878"
     environment:
-      - PUID=${PUID:-1000}
-      - PGID=${PGID:-1000}
+      - PUID=${PUID}
+      - PGID=${PGID}
       - UMASK=002
-      - HOMELAB_TZ=${HOMELAB_TZ:-Europe/Madrid}
+      - TZ=${HOMELAB_TZ}
     volumes:
       - ./radarr/config:/config
       - ./radarr/data:/data
-      - ${MEDIA_ROOT:-/media}:/media
+      - ${MEDIA_ROOT}:/media
     restart: 'unless-stopped'
     depends_on:
       - qbittorrent-nox
@@ -90,14 +90,14 @@ services:
     # ports:
     #   - "8989:8989"
     environment:
-      - PUID=${PUID:-1000}
-      - PGID=${PGID:-1000}
+      - PUID=${PUID}
+      - PGID=${PGID}
       - UMASK=002
-      - HOMELAB_TZ=${HOMELAB_TZ:-Europe/Madrid}
+      - TZ=${HOMELAB_TZ}
     volumes:
       - ./sonarr/config:/config
       - ./sonarr/data:/data
-      - ${MEDIA_ROOT:-/media}:/media
+      - ${MEDIA_ROOT}:/media
     restart: 'unless-stopped'
     depends_on:
       - qbittorrent-nox
@@ -113,13 +113,13 @@ services:
     container_name: jellyfin
     image: jellyfin/jellyfin:latest
     init: true
-    user: ${JELLYFIN_UID:-1000}:${JELLYFIN_GID:-1000} # Remember to change using id -u : id -g
+    user: ${JELLYFIN_UID}:${JELLYFIN_GID} # Remember to change using id -u : id -g
     # network_mode: 'host' # Required for DLNA, incompatible with network settings below
     volumes:
       - ./jellyfin/config:/config
       - ./jellyfin/cache:/cache
       - type: bind
-        source: ${JELLYFIN_DIR:-/media/hdd/BolloNAS/Jellyfin}
+        source: ${JELLYFIN_DIR}
         target: /media
         # - /path/to/media2:/media2:ro
     restart: 'unless-stopped'
@@ -130,7 +130,7 @@ services:
       - /dev/dri/renderD128:/dev/dri/renderD128
       - /dev/dri/card0:/dev/dri/card0
     group_add:
-      - ${RENDER_GID:-993} # Search for render group id with: cat /etc/group | grep render
+      - ${RENDER_GID} # Search for render group id with: cat /etc/group | grep render
     networks:
       homelab:
         ipv4_address: 10.0.1.34

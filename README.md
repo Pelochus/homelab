@@ -26,6 +26,23 @@ More info about this repo in the [wiki](https://github.com/Pelochus/homelab/wiki
 Conventions for working in this repo (design rules, commit style, what is verifiable
 where): `AGENTS.md`.
 
+## Secrets
+Secrets are not in tracked files. A stack that needs one reads a gitignored
+`docker/<stack>/.env`; the committed `docker/<stack>/.env` holds node facts only.
+A credential is committed only as a one-way hash, never as ciphertext keyed by the
+repo — a public repo cannot hold a recoverable secret.
+
+- code-server login: `CODE_SERVER_HASHED_PASSWORD` in the tracked `docker/others/.env`,
+  an argon2 hash (`HASHED_PASSWORD` wins over `PASSWORD`; code-server verifies argon2
+  only, a bcrypt hash is rejected). Generate it with
+  `echo -n 'password' | argon2 "$(openssl rand -hex 8)" -e -i` (`argon2` is in Arch's
+  extra repo) and double every `$` before writing it in — compose interpolates `$`
+  inside values substituted from a `.env`, and an unescaped hash arrives mangled.
+- Homarr `SECRET_ENCRYPTION_KEY`, Beszel `BESZEL_TOKEN`: `openssl rand -hex 16`,
+  regenerated per node, never stored.
+- Beszel `BESZEL_KEY`: the Beszel hub prints it on its first run; paste it into the
+  gitignored `.env`, the agent cannot authenticate without it.
+
 ## TODO:
 - Think of backups automation (Rsync + Bash or Ansible)
 - Some CI/CD and GitOps (i.e.: auto deploy webserver on git push)

@@ -1,14 +1,16 @@
 ---
-# Homarr, Beszel (hub + agent)
 services:
   homarr:
     container_name: homarr
     image: ghcr.io/homarr-labs/homarr:latest
     init: true
     restart: unless-stopped
+    # secrets stay out of git: the gitignored .secrets.env is absent in CI, present on the node
+    env_file:
+      - path: ./.secrets.env
+        required: false
     environment:
-      - HOMELAB_TZ=${HOMELAB_TZ:-Europe/Madrid}
-      - SECRET_ENCRYPTION_KEY=9fb0446198ef137e6dcb75568f0c9f7266fdd52b9d7a07875767e55beb29d77c
+      - TZ=${HOMELAB_TZ}
     volumes:
       - ./homarr/appdata:/appdata
       - /var/run/docker.sock:/var/run/docker.sock
@@ -29,7 +31,8 @@ services:
     #   start_period: 10s
     #   timeout: 5s
     environment:
-      - APP_URL=${BESZEL_URL:-http://10.0.1.21:8090}
+      - TZ=${HOMELAB_TZ}
+      - APP_URL=${BESZEL_URL}
     volumes:
       - ./beszel/data:/beszel_data
       - ./beszel/socket:/beszel_socket
@@ -40,10 +43,15 @@ services:
   beszel-agent:
     container_name: beszel-agent
     image: henrygd/beszel-agent:latest
+    init: true
     restart: unless-stopped
     # healthcheck:
     #   test: ['CMD', '/agent', 'health']
     #   interval: 120s
+    # TOKEN and KEY come from the gitignored .secrets.env
+    env_file:
+      - path: ./.secrets.env
+        required: false
     network_mode: host
     volumes:
       - ./beszel/agent:/var/lib/beszel-agent
@@ -51,12 +59,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       LISTEN: /beszel_socket/beszel.sock
-      HUB_URL: ${BESZEL_URL:-http://10.0.1.21:8090}
-      TOKEN: ${BESZEL_TOKEN:-}
-      KEY: "${BESZEL_KEY:-}"
-      # healthcheck:
-      #   test: ['CMD', '/agent', 'health']
-      #   interval: 120s
+      HUB_URL: ${BESZEL_URL}
 
 networks:
   homelab:
