@@ -24,5 +24,9 @@
     mode: "0644"
   become: true
 
+- name: Configure the hardware watchdog
+  ansible.builtin.import_tasks: watchdog.yml
+  when: config_watchdog_device | length > 0
+
 - name: Apply the systemd refresh schedule
   ansible.builtin.import_tasks: scheduler.yml

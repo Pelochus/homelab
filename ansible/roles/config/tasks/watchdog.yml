@@ -1,0 +1,35 @@
+---
+- name: Install the watchdog configuration
+  ansible.builtin.template:
+    src: watchdog.conf.j2
+    dest: /etc/watchdog.conf
+    owner: root
+    group: root
+    mode: "0644"
+  become: true
+
+- name: Install the watchdog unit defaults
+  ansible.builtin.template:
+    src: default-watchdog.j2
+    dest: /etc/default/watchdog
+    owner: root
+    group: root
+    mode: "0644"
+  become: true
+
+- name: Keep the watchdog daemon enabled at boot
+  ansible.builtin.systemd_service:
+    name: "{{ config_watchdog_unit }}"
+    enabled: true
+  become: true
+
+- name: Run the watchdog daemon on that configuration
+  ansible.builtin.shell: >-
+    systemctl restart {{ config_watchdog_unit }}
+    || systemctl start {{ config_watchdog_unit }}
+  become: true
+  changed_when: false
+
+- name: Check the watchdog daemon is running
+  ansible.builtin.command: systemctl is-active {{ config_watchdog_unit }}
+  changed_when: false
