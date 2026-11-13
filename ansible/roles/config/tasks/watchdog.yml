@@ -25,8 +25,7 @@
 
 - name: Run the watchdog daemon on that configuration
   ansible.builtin.shell: >-
-    systemctl restart {{ config_watchdog_unit }}
-    || systemctl start {{ config_watchdog_unit }}
+    systemctl restart {{ config_watchdog_unit }} || systemctl start {{ config_watchdog_unit }}
   become: true
   changed_when: false
 
