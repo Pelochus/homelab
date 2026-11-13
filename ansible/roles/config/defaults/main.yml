@@ -48,12 +48,12 @@ config_syspkgs:
   - fzf
   - du-dust
 
+config_timezone: Europe/Madrid
+
 config_refresh_unit: homelab-refresh
 
 config_refresh_cadence: "*-*-01 04:00"
 
-# kernel watchdog: this node's device is the chipset's iTCO counter
-# an empty config_watchdog_device makes a node without one skip this block
 config_watchdog_unit: watchdog.service
 config_watchdog_device: /dev/watchdog0
 config_watchdog_timeout: 30

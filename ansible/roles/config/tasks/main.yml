@@ -24,6 +24,12 @@
     mode: "0644"
   become: true
 
+- name: Set the OS timezone
+  ansible.builtin.command: /usr/bin/timedatectl set-timezone {{ config_timezone }}
+  changed_when: false
+  become: true
+  when: config_timezone | length > 0
+
 - name: Configure the hardware watchdog
   ansible.builtin.import_tasks: watchdog.yml
   when: config_watchdog_device | length > 0
