@@ -1,47 +1,39 @@
 # pelochus/homelab V3
-Personal home server configuration and automation. I use this repo as a reminder of all I did and why I did it in case I want to redo my server from the ground up in the future. This also allows me to skip some steps for future installs since I automated installations, configuration and maintenance. Made it public in case anyone wants to see my personal home server configuration as a point of reference or want to see my skills in homelabbing.
 
-## Short Term TODO:
-Adding it here to force myself to do as soon as possible:
-- Add AI node info (BC250)
-- Consider Ansible split per device type (install what is needed on BC250 node differently from N100)
+Personal home server: configuration, automation, and the reasoning behind both, so the
+whole server can be rebuilt from scratch.
+
+- One node today (`serverbollo`), a cluster later.
+- Ansible automates the OS layer and the service deploy.
+- One Docker compose stack per service group, reached through a VPN.
+- State snapshots live in the repo, secrets do not.
 
 ![ServerMainWeb](https://github.com/Pelochus/homelab/blob/main/img/server-main-web.png)
 
-You can see my Homarr instance here, with all the services I have. On the right, you can see my 3D printer webcam.
-In the next diagram you can see my homelab's architecture.
+- Homarr dashboard: every service on the left, the 3D-printer webcam on the right.
 
 ![Architecture](https://github.com/Pelochus/homelab/blob/main/img/pelochus-homelab.drawio.png)
 
-## More info
-More info about this repo in the [wiki](https://github.com/Pelochus/homelab/wiki). You can find:
-- Hardware used
-- OS used and its configuration
-- Software installed and deployed
-- Backups strategy
-- Technical information about Ansible automation and Docker containers used
+- Network layout: router, this server, the printer-cam Pi, and the container addresses.
 
-Conventions for working in this repo (design rules, commit style, what is verifiable
-where): `AGENTS.md`.
+## Docs
 
-## Secrets
-Secrets live in the gitignored `docker/<stack>/.secrets.env`, read through `env_file`;
-node facts live in the tracked `docker/<stack>/.env`. A credential that must survive a
-redeploy is tracked as a one-way hash. `./secrets.sh` writes the generated ones and
-`setup.sh` runs it when the file is missing.
+- [Docs index](docs/README.md) — hardware, OS, software, backups, Ansible, Docker,
+  first-time setup
+- [Repo conventions](AGENTS.md) — design rules, layout, verification, commit style
 
-- `docker/others/.env`: `CODE_SERVER_HASHED_PASSWORD` — argon2 only, bcrypt rejected,
-  `echo -n 'password' | argon2 "$(openssl rand -hex 8)" -e -i`, every `$` doubled
-  (compose interpolates `$` in `.env` values)
-- `docker/monitoring/.secrets.env`: `SECRET_ENCRYPTION_KEY` — `openssl rand -hex 32`,
-  64 hex characters; `TOKEN` and `KEY` — from the Beszel hub: Settings → tokens, and the
-  system's SSH public key
+## Short-term TODO
 
-## TODO:
-- Think of backups automation (Rsync + Bash or Ansible)
-- Some CI/CD and GitOps (i.e.: auto deploy webserver on git push)
-- Use cloud-init for clusters
-- Use k3s
-- Reduce Ansible usage for things updating Dockers
-- Proxmox as base OS, then put Ubuntu Server/Debian on top (or similar)
-- Add more services like Uptime Kuma
+- Add the AI node (AMD BC250) to the docs and to `ansible/hosts`.
+- Split Ansible per device type: install on the BC250 node what it needs, not what the
+  N100 needs.
+
+## TODO
+
+- Rethink backups automation (Rsync + Bash, or Ansible).
+- CI/CD and GitOps: auto-deploy the webserver on git push.
+- Use cloud-init for clusters.
+- Use k3s.
+- Reduce Ansible where it only refreshes Docker services.
+- Proxmox as base OS, with Ubuntu Server/Debian on top.
+- Add more services: Uptime Kuma.

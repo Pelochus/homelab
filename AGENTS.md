@@ -4,6 +4,10 @@ Scope: the whole repo — `ansible/` (deploy automation), `docker/` (one compose
 per service group), `docker/web/web` (submodule of the personal page), `backups/`,
 `img/`, `logs/`, the root scripts, and the root config files.
 
+Read [the repo README](README.md) for the public description and the TODO roadmap, and
+[the docs index](docs/README.md) for the long-form pages (hardware, OS, software,
+backups, Ansible, Docker, first-time setup).
+
 ## 1. Design
 
 - **Simple and minimal beats capable.** Prefer what is cheap to set up, cheap to run
@@ -69,8 +73,12 @@ in this repo, not a new repo and not a playbook that branches.
   "as discussed above", "the linter caught this"; keep the fact the note carried.
 - **Docs are scanned, not studied**: short lines, plain wording, no storytelling about
   how a trick works. A doc states facts and rules; the rationale for a setting lives
-  with the setting. Long-form docs live on the GitHub wiki; in-repo docs are
-  `README.md` and `backups/configs/README.md`.
+  with the setting. Long-form docs live in `docs/`; in-repo docs are
+  `README.md`, `docs/README.md` and `backups/configs/README.md`.
+- **Markdown pages: one H1 title, `##` sections**, bulleted, no first-person narration.
+  Link text says what the target holds (`[Docker stacks](docs/DOCKER.md)`), never the bare
+  filename; relative links only, and every page ends with a `## Related` block that
+  points at [the docs index](docs/README.md).
 
 ## 4. Layout
 
@@ -83,6 +91,7 @@ in this repo, not a new repo and not a playbook that branches.
 | `docker/<stack>/.secrets.env` | secrets for that stack, gitignored, read through `env_file` |
 | `docker/web/web/` | submodule → the `web` repo; the served tree is `site/`, mount that, never the checkout root |
 | `backups/configs/` | saved node state (`configs-*.zip`) + its README |
+| `docs/` | long-form documentation, index `docs/README.md` |
 | `lint.sh`, `setup.sh`, `secrets.sh` | local mirror of CI; first-run bootstrap on a fresh node; writes the gitignored stack secrets once |
 | `.yamllint`, `.ansible-lint`, `.ansible-lint-ignore`, `.gitattributes` | the linters' own configs, at the **repo root** (discovery is working-directory based — see §5) |
 | `img/`, `logs/` | screenshots and saved logs (`logs/` gitignored) |
@@ -135,13 +144,12 @@ in this repo, not a new repo and not a playbook that branches.
   written into a `.env` doubles every `$` (`$$` in the file is one `$` at runtime); an
   unescaped hash arrives mangled and the service silently loses its auth.
 
-## 8. References
+## 8. Docs and references
 
-- `README.md` is the roadmap (its TODO lists) and the public description — update it
-  when conventions or layout change.
-- Long-form documentation lives on the GitHub wiki (hardware, OS, services, backups,
-  ansible); there is no `ansible/README.md` or `docker/README.md`. The wiki's own git
-  sidecar is checked out at `~/.cache/pi-wiki/wiki`: edit and commit there, and say that
-  its `git push` is still owed.
-- `backups/configs/README.md` states what state is saved on the node and when.
+- [Repo README](README.md): public description and the TODO roadmap — update it when
+  conventions or layout change.
+- [docs/README.md](docs/README.md): index of the long-form pages — hardware, OS,
+  software, backups, Ansible, Docker, first-time setup. It links every page; pages link
+  back to it under `## Related`. There is no `ansible/README.md` or `docker/README.md`.
+- [Backups README](backups/configs/README.md): what state is saved on the node and when.
 - Update this file whenever a convention changes.
