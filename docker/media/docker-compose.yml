@@ -24,6 +24,11 @@ services:
     tmpfs:
       - /tmp
     tty: true
+    healthcheck:
+      test: ['CMD', 'curl', '-sf', 'http://127.0.0.1:8080/']
+      interval: 120s
+      start_period: 30s
+      timeout: 5s
     volumes:
       - ./qbittorrent/config:/config
       - ${TORRENT_DIR}:/downloads
@@ -46,6 +51,11 @@ services:
       - PGID=${PGID}
       - UMASK=002
       - TZ=${HOMELAB_TZ}
+    healthcheck:
+      test: ['CMD', 'curl', '-sfL', 'http://127.0.0.1:9696/']
+      interval: 120s
+      start_period: 30s
+      timeout: 5s
     volumes:
       - ./prowlarr/config:/config
     restart: 'unless-stopped'
@@ -63,6 +73,11 @@ services:
       - PGID=${PGID}
       - UMASK=002
       - TZ=${HOMELAB_TZ}
+    healthcheck:
+      test: ['CMD', 'curl', '-sfL', 'http://127.0.0.1:7878/']
+      interval: 120s
+      start_period: 30s
+      timeout: 5s
     volumes:
       - ./radarr/config:/config
       - ./radarr/data:/data
@@ -84,6 +99,11 @@ services:
       - PGID=${PGID}
       - UMASK=002
       - TZ=${HOMELAB_TZ}
+    healthcheck:
+      test: ['CMD', 'curl', '-sfL', 'http://127.0.0.1:8989/']
+      interval: 120s
+      start_period: 30s
+      timeout: 5s
     volumes:
       - ./sonarr/config:/config
       - ./sonarr/data:/data

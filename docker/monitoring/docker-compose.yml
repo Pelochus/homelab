@@ -25,11 +25,12 @@ services:
     image: henrygd/beszel:latest
     init: true
     restart: unless-stopped
-    # healthcheck:
-    #   test: ['CMD', '/beszel', 'health', '--url', 'http://10.0.1.21:8090']
-    #   interval: 120s
-    #   start_period: 10s
-    #   timeout: 5s
+    # the hub's own health endpoint, probed through its APP_URL port
+    healthcheck:
+      test: ['CMD', '/beszel', 'health', '--url', 'http://127.0.0.1:8090']
+      interval: 120s
+      start_period: 10s
+      timeout: 5s
     environment:
       - TZ=${HOMELAB_TZ}
       - APP_URL=${BESZEL_URL}
@@ -45,9 +46,10 @@ services:
     image: henrygd/beszel-agent:latest
     init: true
     restart: unless-stopped
-    # healthcheck:
-    #   test: ['CMD', '/agent', 'health']
-    #   interval: 120s
+    healthcheck:
+      test: ['CMD', '/agent', 'health']
+      interval: 120s
+      timeout: 5s
     # TOKEN and KEY come from the gitignored .secrets.env
     env_file:
       - path: ./.secrets.env

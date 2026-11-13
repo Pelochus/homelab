@@ -9,6 +9,11 @@ services:
     #   - "8888:80"
     volumes:
       - ./web/site:/usr/share/nginx/html:ro
+    # the nginx image ships no HTTP client, so its config test is the health probe
+    healthcheck:
+      test: ['CMD', '/usr/sbin/nginx', '-t', '-vv']
+      interval: 120s
+      timeout: 5s
     restart: unless-stopped
     networks:
       homelab:

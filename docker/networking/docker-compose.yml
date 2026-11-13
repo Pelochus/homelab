@@ -11,6 +11,10 @@ services:
       - '80:80'
       # - '81:81' # WebUI port
       - '443:443'
+    healthcheck:
+      test: ['CMD', 'curl', '-sf', 'http://127.0.0.1:81/']
+      interval: 120s
+      timeout: 5s
     volumes:
       # routing state lives here, not in this file
       - ./nginx/data:/data
@@ -32,6 +36,11 @@ services:
       - 53:53/udp
       # - 88:80/tcp # http web interface
       # - 3000:3000/tcp # initial setup web interface
+    # the web interface port stays unmapped, so the binary itself answers for health
+    healthcheck:
+      test: ['CMD', '/opt/adguardhome/AdGuardHome', '--version']
+      interval: 120s
+      timeout: 5s
     volumes:
       - ./adguard/config:/opt/adguardhome/conf
       - ./adguard/work:/opt/adguardhome/work

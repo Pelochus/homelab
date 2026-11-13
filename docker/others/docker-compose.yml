@@ -16,6 +16,11 @@ services:
       - ${CODE_SERVER_HOME}:/home
     # ports:
     # - 8443:8443
+    healthcheck:
+      test: ['CMD', 'curl', '-sfL', 'http://127.0.0.1:8443/']
+      interval: 120s
+      start_period: 30s
+      timeout: 5s
     restart: unless-stopped
     networks:
       homelab:
@@ -33,6 +38,11 @@ services:
       - ${PYLOAD_DIR}:/downloads
     # ports:
     #   - 8000:8000 # WebUI port
+    healthcheck:
+      test: ['CMD', 'curl', '-sfL', 'http://127.0.0.1:8000/']
+      interval: 120s
+      start_period: 30s
+      timeout: 5s
     restart: unless-stopped
     networks:
       homelab:
