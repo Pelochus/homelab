@@ -93,6 +93,7 @@ in this repo, not a new repo and not a playbook that branches.
 | `backups/configs/` | saved node state (`configs-*.zip`) + its README |
 | `docs/` | long-form documentation, index `docs/README.md` |
 | `lint.sh`, `setup.sh`, `secrets.sh` | local mirror of CI; first-run bootstrap on a fresh node; writes the gitignored stack secrets once |
+| `.githooks/pre-commit` | the commit gate: `./lint.sh` when its tools resolve, plus the markdown link check |
 | `.yamllint`, `.ansible-lint`, `.ansible-lint-ignore`, `.gitattributes` | the linters' own configs, at the **repo root** (discovery is working-directory based — see §5) |
 | `img/`, `logs/` | screenshots and saved logs (`logs/` gitignored) |
 
@@ -100,6 +101,13 @@ in this repo, not a new repo and not a playbook that branches.
 
 - Run `./lint.sh` (or CI's `.github/workflows/lint.yml`) before committing YAML/Ansible
   changes; it must exit 0.
+- `.githooks/pre-commit` is the gate: it runs `./lint.sh` only when all three linters
+  resolve — from `LINT_BIN` (`~/.cache/homelab-lint/bin` by default, override it) — and
+  skips with a note when one is missing, because a run with a silent tool proves nothing.
+  It also fails on markdown links whose text repeats the wiki-style prefix, and on
+  tracked markdown whose relative links resolve to nothing.
+- `core.hooksPath = .githooks` is relative to the repo root; `setup.sh` sets it, a
+  manual clone sets it with `git config core.hooksPath .githooks`.
 - ansible-lint reads `.ansible-lint` and `.ansible-lint-ignore` from the **current
   directory**, so run `ansible-lint ansible` from the repo root. Inside `ansible/` it
   silently uses the default ruleset — a green run there proves nothing.

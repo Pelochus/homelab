@@ -43,6 +43,9 @@ fi
 # gitignored stack secrets, no-op once the file exists
 "$repo_dir/secrets.sh"
 
+# the commit gate runs ./lint.sh; relative hooksPath resolves from the repo root
+git -C "$repo_dir" config core.hooksPath .githooks
+
 cd "$playbooks_dir" || exit 1
 
 case "${1:-}" in
