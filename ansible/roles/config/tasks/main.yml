@@ -17,8 +17,8 @@
 
 - name: Configure unattended package upgrades
   ansible.builtin.copy:
-    src: 20unattended
-    dest: /etc/apt/apt.conf.d/20unattended
+    src: 20unattended-upgrades
+    dest: /etc/apt/apt.conf.d/20unattended-upgrades
     owner: root
     group: root
     mode: "0644"

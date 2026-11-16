@@ -18,7 +18,8 @@ packages through `apt`.
 - **`.bashrc` block**: personal aliases, applied with `blockinfile`
 - **System packages**: `config_syspkgs` in `ansible/roles/config/defaults/main.yml` — tools
   plus coreutils replacements (`eza`, `bat`, `ripgrep`, `fd`, `zoxide`, `duf`, `ncdu`, `fzf`)
-- **Unattended upgrades**: `/etc/apt/apt.conf.d/20unattended` (mail, no reboot requests)
+- **Unattended upgrades**: `/etc/apt/apt.conf.d/20unattended-upgrades` replaces the distro default
+  (security + suite pocket, no auto-reboot, no removals); `20archive` is left untouched
 - **Timezone**: `config_timezone`
 - **Hardware watchdog**: `/etc/watchdog.conf` + `/etc/default/watchdog`, device
   `/dev/watchdog0`, timeout 30, interval 10

@@ -3,12 +3,11 @@
 // Wait for an external lock instead of failing when apt is busy
 DPkg::Lock::Timeout "1200";
 
-// Debian defaults to security-only updates; Ubuntu's defaults already include the
-// suite, so these lines make both distros behave the same way.
-Unattended-Upgrade::Only-Built-In-Security "false";
+// Debian defaults to the security pocket; these lines make both distros upgrade the same set
+// unattended-upgrade expands ${distro_id}, ${distro_codename}, ${distro_release}; an unknown name aborts the run
 Unattended-Upgrade::Allowed-Origins {
-    "${distro} ${codename}";
-    "${distro} ${codename}-security";
+    "${distro_id}:${distro_codename}";
+    "${distro_id}:${distro_codename}-security";
 };
 
 // Kernel/glibc updates can require a reboot; never do that silently on a home server
@@ -18,7 +17,8 @@ Unattended-Upgrade::Automatic-Reboot "false";
 Unattended-Upgrade::Remove-Unused-Dependencies "false";
 Unattended-Upgrade::Remove-Unused-Kernel-Packages "false";
 
-// systemd cron cadence: refresh the lists nightly, upgrade at 06:00, announce the delta
+// systemd cron cadence: refresh the lists nightly, upgrade at 06:00
 APT::Periodic::Update-Package-Lists "1";
 APT::Periodic::Unattended-Upgrade "1";
-APT::Periodic::Download-Update-Announcements "1";
+// Needs apt >= 3.x, the apt on this node ignores the key
+//APT::Periodic::Download-Update-Announcements "1";
