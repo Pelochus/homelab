@@ -21,4 +21,5 @@ The repo code is the source of truth; these pages point at it and state the rule
 
 ## Architecture
 
-![Architecture](../img/pelochus-homelab.drawio.png)
+- [`README.md`](../README.md) — the Mermaid diagram of both nodes, the compose stacks,
+  the reverse-proxy and DNS routing, and the `10.0.0.0/16` addressing plan
