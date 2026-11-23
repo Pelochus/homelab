@@ -3,8 +3,15 @@
 # a rotated secret invalidates what the service already encrypted. Delete it to regenerate.
 # code-server's argon2 hash stays tracked in docker/others/.env.
 
+set -euo pipefail
+
 repo_dir="$(dirname "$(readlink -f "$0")")"
-cd "$repo_dir" || exit 1
+cd "$repo_dir"
+
+command -v openssl >/dev/null 2>&1 || {
+    echo "openssl generates the secrets; install it first." >&2
+    exit 1
+}
 
 stacks=(monitoring)
 
@@ -16,9 +23,11 @@ for stack in "${stacks[@]}"; do
         continue
     fi
 
+    # a partial write must not pass the -e check above
+    tmp="$file.tmp"
     case "$stack" in
         monitoring)
-            cat >"$file" <<EOF
+            cat >"$tmp" <<EOF
 # Homarr encrypts its database with this key
 SECRET_ENCRYPTION_KEY=$(openssl rand -hex 32)
 # Beszel issues both: TOKEN under Settings -> tokens, KEY the hub's SSH public key
@@ -32,6 +41,7 @@ EOF
             ;;
     esac
 
-    chmod 600 "$file"
+    chmod 600 "$tmp"
+    mv "$tmp" "$file"
     echo "new   $file"
 done

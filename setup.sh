@@ -2,6 +2,8 @@
 # Entry point for the Ansible playbooks that build the homelab.
 # OS upgrades are unattended: this script never reboots the host.
 
+set -euo pipefail
+
 repo_dir="$(dirname "$(readlink -f "$0")")"
 playbooks_dir="$repo_dir/ansible"
 
@@ -30,9 +32,9 @@ run_playbooks() {
 ### Main
 ########
 
-if ! command -v ansible-playbook >/dev/null; then
+if ! command -v ansible >/dev/null 2>&1; then
     echo "Ansible is not installed; installing it now."
-    sudo apt install ansible -y
+    sudo apt update && sudo apt install -y ansible
 fi
 
 if ! ansible-galaxy collection list 2>/dev/null | grep -q 'community\.docker'; then
@@ -46,7 +48,7 @@ fi
 # the commit gate runs ./lint.sh; relative hooksPath resolves from the repo root
 git -C "$repo_dir" config core.hooksPath .githooks
 
-cd "$playbooks_dir" || exit 1
+cd "$playbooks_dir"
 
 case "${1:-}" in
     -h|--help)
@@ -68,7 +70,7 @@ case "${1:-}" in
             echo "  [4] Run backups (stub role)"
             echo "  [5] Quit"
             echo
-            read -r -p "Choose: " choice
+            read -r -p "Choose: " choice || break
             case "$choice" in
                 1) run_playbooks os-config.yml ;;
                 2) run_playbooks software-deploy.yml ;;

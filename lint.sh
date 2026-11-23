@@ -7,7 +7,7 @@
 # Tools: yamllint and ansible-lint (pip/uv, or the ansible GitHub Action),
 # yamlfmt (https://github.com/google/yamlfmt)
 
-set -e
+set -euo pipefail
 
 cd "$(dirname "$0")"
 
