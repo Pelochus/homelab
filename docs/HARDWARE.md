@@ -1,16 +1,13 @@
 # Hardware
 
-Node: unbranded Intel Mini PC, hostname `serverbollo`.
+Hostname `serverbollo`.
 
 ## Specs
 
-- **Intel N100 (Alder Lake)**: better than the Rockchip in an Orange Pi 5, and good codec
-  support (even AV1) is what makes Jellyfin transcoding viable here
+- **Intel N100 (Alder Lake)**: QuickSync iGPU, `/dev/dri/renderD128` (group `render`)
 - **16 GB RAM**
 - **512 GB SSD** (SATA, ~500 MB/s), holds the OS; `/dev/sdb`
 - **Gigabit Ethernet**
-- **Hardware watchdog** `/dev/watchdog0`: the BIOS watchdog is armed by `watchdog.service`,
-  so a frozen kernel reboots the box instead of leaving it unreachable
 
 ## Storage
 
@@ -36,7 +33,7 @@ Private addressing on **10.0.0.0/16**:
 
 ## TODO
 
-- Cable management and a proper case for the Mini PC
+- Cable management and a case
 
 ## Related
 

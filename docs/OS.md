@@ -22,7 +22,7 @@ packages through `apt`.
   (security + suite pocket, no auto-reboot, no removals); `20archive` is left untouched
 - **Timezone**: `config_timezone`
 - **Hardware watchdog**: `/etc/watchdog.conf` + `/etc/default/watchdog`, device
-  `/dev/watchdog0`, timeout 30, interval 10
+  `/dev/watchdog0`, timeout 30, interval 10; a hung kernel reboots the node
 - **Refresh timer**: `homelab-refresh.service` + `.timer`, cadence `*-*-01 04:00`, output
   logged to `logs/`
 
