@@ -23,3 +23,6 @@ deploy_samba_template: ksmbd.conf.j2
 deploy_docker_network: homelab
 deploy_docker_subnet: 10.0.1.0/24
 deploy_docker_gateway: 10.0.1.1
+
+deploy_render_device: /dev/dri/renderD128
+deploy_render_stack: media

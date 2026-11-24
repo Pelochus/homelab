@@ -18,13 +18,16 @@ config_syspkgs:
   - iperf3
   - fastfetch
   - intel-opencl-icd
+  - intel-media-va-driver-non-free
+  - vainfo
+  - intel-gpu-tools
   - bleachbit
 
   - jq
   - lsof
   - sysstat
   - iotop
-  - dnsutils
+  - bind9-dnsutils
   - tmux
   - zip
   - unzip

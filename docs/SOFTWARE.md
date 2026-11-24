@@ -24,7 +24,7 @@ the VPN. The compose files are the source of truth for ports and options.
 
 ## Media
 
-- **Jellyfin**: transcodes on the CPU; the N100 codecs make this fine
+- **Jellyfin**: transcodes on QuickSync (QSV) on the N100
 - **Radarr / Sonarr / Prowlarr**
 - **qBittorrent-nox**
 - **pyload-ng**

@@ -41,6 +41,22 @@
   become: true
   changed_when: false
 
+# the render group GID is per-node: udev assigns it, the tracked .env stays empty
+- name: Read the render group GID
+  ansible.builtin.stat:
+    path: "{{ deploy_render_device }}"
+  register: deploy_render_dev
+  changed_when: false
+
+- name: Set the render group GID in the media stack .env
+  ansible.builtin.lineinfile:
+    path: "{{ homelab_root }}/docker/{{ deploy_render_stack }}/.env"
+    regex: '^RENDER_GID=.*$'
+    line: RENDER_GID={{ deploy_render_dev.stat.gid }}
+    backup: false
+  become: true
+  when: deploy_render_dev.stat.exists
+
 # first deploy only; docker-refresh.yml owns image updates
 - name: Deploy Docker containers
   community.docker.docker_compose_v2:

@@ -14,7 +14,7 @@ names live in `ansible/group_vars/all.yml:compose_stacks`.
 ## Files per stack
 
 - `docker-compose.yml` — tracked
-- `.env` — node facts (ports, uids, paths), tracked
+- `.env` — node facts (ports, uids, paths, host device GIDs), tracked
 - `.secrets.env` — secrets, gitignored, read through `env_file`
 - state dirs (`<stack>/<service>/`) — untracked
 
@@ -25,6 +25,16 @@ names live in `ansible/group_vars/all.yml:compose_stacks`.
 - A container with `network_mode: host` or `pid: host` sits outside it and cannot resolve
   a `10.0.1.x` peer: it reaches siblings through a shared volume or the public URL
   (`beszel-agent`, `BESZEL_URL`, `beszel.sock`).
+
+## Host devices
+
+- jellyfin gets `/dev/dri/renderD128` through `devices:` plus `group_add: ${RENDER_GID:-root}`;
+  the device is group-owned by `render`, so the container needs the numeric host GID to read
+  it, and an empty `RENDER_GID` grants `root` only (jellyfin then transcodes on the CPU).
+- udev assigns that GID per node, so the `deploy` role rewrites `RENDER_GID` in the stack
+  `.env` from the live device; the tracked value stays empty.
+- `group_add: render` is wrong: the name resolves in the container's `/etc/group`, whose
+  `render` number is not the host's.
 
 ## Health
 

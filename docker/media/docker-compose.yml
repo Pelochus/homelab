@@ -138,8 +138,9 @@ services:
     devices:
       - /dev/dri/renderD128:/dev/dri/renderD128
       - /dev/dri/card0:/dev/dri/card0
+    # the render GID is per-node; the deploy role writes it, empty grants the root group only
     group_add:
-      - ${RENDER_GID}
+      - ${RENDER_GID:-root}
     networks:
       homelab:
         ipv4_address: 10.0.1.34
