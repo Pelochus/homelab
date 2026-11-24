@@ -25,10 +25,8 @@ backups, Ansible, Docker, first-time setup).
   - Unattended system upgrades are the OS layer, not an ansible task.
   - Every container gets `init: true` unless it shares the host PID namespace or its image owns `/init` (s6-overlay refuses to run outside pid 1).
 - **Rules are defaults, not a contract.** When one fights a case, break it and say why
-  at the place it breaks — a one-line comment, or the README. A short note that carries
-  a fact is worth keeping even where a style rule would seem to forbid it: what a stub
-  is for, why a layer is only a fallback, a vendor quirk, a value that was chosen over
-  a better-looking one.
+  at the place it breaks — a one-line comment, or the README. A short note that carries a
+  fact (a vendor quirk, a chosen value, why a layer is only a fallback) is worth keeping.
 - **Images track upstream.** Every image carries an explicit `:latest` — never a pin,
   never a bare tag. Upstream drift is accepted the way `apt upgrade` is, and the
   monthly refresh repairs a bad release.
