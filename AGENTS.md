@@ -11,49 +11,40 @@ backups, Ansible, Docker, first-time setup).
 ## 1. Design
 
 - **Simple and minimal beats capable.** Prefer what is cheap to set up, cheap to run
-  and light on RAM over what does more: `beszel` over `netdata`, `wg-easy` over a
-  hand-rolled OVPN/iptables setup. When a lighter tool covers the need, switch to it
+  and light on RAM over what does more. When a lighter tool covers the need, switch to it
   and delete the heavier one.
 - **One way to do a thing per layer.** No shell script *and* an ansible task for one
   job. A layer kept only as a fallback says so in its README.
 - **Security over convenience**, as defaults:
-  - Secrets never live in tracked files: node facts go in the tracked
-    `docker/<stack>/.env`, secrets in the gitignored `docker/<stack>/.secrets.env`.
+  - Secrets never live in tracked files: node facts go in the tracked `docker/<stack>/.env`,
+    secrets in the gitignored `docker/<stack>/.secrets.env`.
   - A credential that must survive a from-scratch redeploy is committed as a one-way
-    hash (`CODE_SERVER_HASHED_PASSWORD` is argon2), never as ciphertext keyed by
-    something in the repo.
-  - Unattended system upgrades are the OS layer, not an ansible task.
-  - Every container gets `init: true` unless it shares the host PID namespace or its image owns `/init` (s6-overlay refuses to run outside pid 1).
+    hash, never as ciphertext keyed by something in the repo.
+  - Work that the OS already does unattended stays with the OS, not in an automation task.
 - **Rules are defaults, not a contract.** When one fights a case, break it and say why
   at the place it breaks — a one-line comment, or the README. A short note that carries a
   fact (a vendor quirk, a chosen value, why a layer is only a fallback) is worth keeping.
-- **Images track upstream.** Every image carries an explicit `:latest` — never a pin,
-  never a bare tag. Upstream drift is accepted the way `apt upgrade` is, and the
-  monthly refresh repairs a bad release.
-- **Anything that can drift is a variable** — paths, ports, uids, package lists,
-  per-node facts go in `group_vars`, a compose `.env`, or `${VAR:-default}`, not inside
-  a task or a literal line. Reuse the names already in use (`homelab_root`, `user`,
-  `compose_stacks`, `docker_prune_filter`, `config_syspkgs`, `backups_paths`,
-  `HOMELAB_TZ`, `MEDIA_ROOT`, `WG_HOST`) rather than adding near-duplicates.
-  A compose `ipv4_address:` may stay a literal until it earns a name; name it once
-  another node would have to change it (`ADGUARD_IPV4`).
+- **Anything that can drift is a variable** — paths, ports, ids, lists and per-node
+  facts go in the shared config file for their layer or in a `${VAR:-default}`, not
+  inside a task or a literal line. Reuse a name that already exists (`homelab_root`,
+  `user`, `compose_stacks`) before adding a near-duplicate.
+- **A rule that belongs to one layer lives on that layer's page, not here.** This file
+  states the guidelines; `docs/` carries the facts about a stack, a package or a
+  vendor quirk.
 
 ## 2. Think long-term and extensible
 
-One node today (`[master]`), a cluster later: a second node — e.g. the AMD BC250 box
-running a different subset — is a new group in `ansible/hosts` and its own playbook
-in this repo, not a new repo and not a playbook that branches.
+One node today, a cluster later: a second node is a new group in the inventory with
+its own playbook in this repo, not a new repo and not a playbook that branches.
 
-- Node facts live in `group_vars`, not in roles: `ansible/group_vars/all.yml` for
-  shared values, one file per group for per-node overrides. A role that hardcodes a
-  path, a uid or a host name cannot serve a second node.
+- Node facts live in the inventory's group files, not in code: one file for shared
+  values, one per group for overrides. Code that hardcodes a path, an id or a host
+  name cannot serve a second node.
 - Keep roles small and composable; a per-node playbook opts into the roles it needs.
-- One compose stack per service group (`docker/<stack>/docker-compose.yml`) so a node
-  runs a subset; the stack names live in `ansible/group_vars/all.yml:compose_stacks`,
-  not in a task.
-- No single-host literals in shared files (`/home/<user>`, `/mnt/<disk>`, uid `1001`):
-  name them (`homelab_root`, `deploy_samba_share`, `deploy_docker_subnet`) so the next
-  node overrides a variable instead of editing the file.
+- One deployable unit per service group, so a node runs a subset; the list of groups
+  lives in a shared config file, not in a task.
+- No single-host literals in shared files (`/home/<user>`, a mount point, an id):
+  name them so the next node overrides a variable instead of editing the file.
 
 ## 3. Style — code and docs
 
@@ -76,7 +67,7 @@ in this repo, not a new repo and not a playbook that branches.
 - **Markdown pages: one H1 title, `##` sections**, bulleted, no first-person narration.
   Link text says what the target holds (`[Docker stacks](docs/DOCKER.md)`), never the bare
   filename; relative links only, and every page ends with a `## Related` block that
-  points at [the docs index](docs/README.md).
+  points at [the docs index](docs/README.md) — the index page itself is the exception.
 
 ## 4. Layout
 
@@ -91,7 +82,7 @@ in this repo, not a new repo and not a playbook that branches.
 | `backups/configs/` | saved node state (`configs-*.zip`) + its README |
 | `docs/` | long-form documentation, index `docs/README.md` |
 | `lint.sh`, `setup.sh`, `secrets.sh` | local mirror of CI; first-run bootstrap on a fresh node; writes the gitignored stack secrets once |
-| `.githooks/pre-commit` | the commit gate: `./lint.sh` when its tools resolve, plus the markdown link check |
+| `.githooks/pre-commit` | the commit gate: `./lint.sh` when its tools resolve; the markdown checks in it run either way |
 | `.yamllint`, `.ansible-lint`, `.ansible-lint-ignore`, `.gitattributes` | the linters' own configs, at the **repo root** (discovery is working-directory based — see §5) |
 | `img/`, `logs/` | screenshots and saved logs (`logs/` gitignored) |
 
@@ -101,9 +92,9 @@ in this repo, not a new repo and not a playbook that branches.
   changes; it must exit 0.
 - `.githooks/pre-commit` is the gate: it runs `./lint.sh` only when all three linters
   resolve — from `LINT_BIN` (`~/.cache/homelab-lint/bin` by default, override it) — and
-  skips with a note when one is missing, because a run with a silent tool proves nothing.
-  It also fails on markdown links whose text repeats the wiki-style prefix, and on
-  tracked markdown whose relative links resolve to nothing.
+  says so when one is missing, because a run with a silent tool proves nothing. The
+  markdown checks (link text doubled into a wiki-style prefix, relative links that resolve
+  to nothing) run either way: they need no extra tool.
 - `core.hooksPath = .githooks` is relative to the repo root; `setup.sh` sets it, a
   manual clone sets it with `git config core.hooksPath .githooks`.
 - ansible-lint reads `.ansible-lint` and `.ansible-lint-ignore` from the **current
@@ -129,7 +120,7 @@ in this repo, not a new repo and not a playbook that branches.
   force-push over them.
 - Never `git push` unless explicitly asked; every other git operation is allowed.
 
-## 7. Gotchas that will bite again
+## 7. Git and ignore rules that bite
 
 - `.gitignore` tracks the stack dirs, their `docker-compose.yml` and their `.env`, and
   ignores everything else inside them, `docker/*/.secrets.env` included: a new stack's
@@ -137,18 +128,6 @@ in this repo, not a new repo and not a playbook that branches.
 - `logs/`, `.pi/`, `.cache/`, `.ansible/` are ignored; do not re-add generated state.
 - `git submodule update` checks out the **pinned** sha, and the pin follows `main` only
   when moved deliberately: pushing the `web` repo never reaches the node by itself.
-- `ansible-lint` requires role-level vars to carry the role prefix (`deploy_*`,
-  `backups_*`, `config_*`); `group_vars/all.yml` vars do not.
-- systemd units need absolute executables (`/usr/bin/ansible-playbook`, not a bare
-  name).
-- `docker_compose_v2` with `pull: always` always reports a change — the monthly-refresh
-  timer's intent, not a bug.
-- A container with `network_mode: host` or `pid: host` sits outside the `homelab`
-  network and cannot resolve any `10.0.1.x` peer: it reaches siblings through a shared
-  volume or the public URL (`beszel-agent`, `BESZEL_URL`, `beszel.sock`).
-- compose interpolates `$` inside values substituted from a `.env`, so an argon2 hash
-  written into a `.env` doubles every `$` (`$$` in the file is one `$` at runtime); an
-  unescaped hash arrives mangled and the service silently loses its auth.
 
 ## 8. Docs and references
 
