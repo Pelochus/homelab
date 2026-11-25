@@ -1,7 +1,7 @@
 # Software
 
-Every service runs as a Docker stack, one compose file per service group, reached through
-the VPN. The compose files are the source of truth for ports and options.
+Every service runs as a Docker stack, one compose file per service group. The compose
+files are the source of truth for ports and options.
 
 ## DNS and reverse proxy
 
@@ -60,8 +60,6 @@ the VPN. The compose files are the source of truth for ports and options.
 | code-server | 8443 |
 | Beszel hub | 8090 |
 | wg-easy | 51820/UDP, 51821/TCP |
-
-Many service ports are commented out in the stacks and reached through the VPN instead.
 
 ## Not in use
 

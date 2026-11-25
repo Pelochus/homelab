@@ -78,14 +78,6 @@ flowchart LR
 
 - Private addressing on `10.0.0.0/16`: router and DHCP `10.0.0.0/24`, this server `10.0.1.0/24`, the printer-cam Pi `10.0.2.0/24`.
 - wg-easy is the only public entry point; Nginx Proxy Manager and AdGuard Home answer on the `homelab` Docker network, gateway `10.0.1.1`.
-- A container with `network_mode: host` sits outside that network and reaches siblings through a shared volume or the public URL.
-- The BC250 node is a plan, not a deploy: it gets its own group in `ansible/hosts` and its own playbook.
-
-## Docs
-
-- [Docs index](docs/README.md) — hardware, OS, software, backups, Ansible, Docker,
-  first-time setup
-- [Repo conventions](AGENTS.md) — design rules, layout, verification, commit style
 
 ## Short-term TODO
 
@@ -102,3 +94,10 @@ flowchart LR
 - Reduce Ansible where it only refreshes Docker services.
 - Proxmox as base OS, with Ubuntu Server/Debian on top.
 - Add more services: Uptime Kuma.
+
+## Related
+
+- [Docs index](docs/README.md) — hardware, OS, software, backups, Ansible, Docker,
+  first-time setup
+- [Repo conventions](AGENTS.md) — design rules, layout, verification, commit style
+- [Saved node state](backups/configs/README.md) — what state is in the repo zips

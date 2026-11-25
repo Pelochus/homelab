@@ -13,15 +13,18 @@ Service-managed state, encrypted in `configs-<DDMonthYYYY>.zip`
 - Homarr: `docker/monitoring/homarr/appdata` (`key.txt`, `migrate-homarr.zip`)
 - *Arr: `docker/media/prowlarr/config`, `radarr/config` and `data`,
   `sonarr/config` and `data` (each service writes its own `*_backup_*.zip`)
-- Pi-Hole: teleporter state, from before AdGuard Home replaced it
+- Pi-Hole: superseded by AdGuard Home; its teleporter state is kept
 - OctoPrint and the Asus router (`Settings_RT-BE92U.CFG`): state lives outside this server
 
 ## Not saved
 
 - Services configured on the fly, e.g. Jellyfin per device, by codec.
-- Media libraries and per-device browser settings: see
-  [Backups](../../docs/BACKUPS.md).
 
 ## Rule
 
 - Every zip contains every backed-up service; a partial snapshot does not go in.
+
+## Related
+
+- [Docs index](../../docs/README.md)
+- [Backups rule](../../docs/BACKUPS.md)

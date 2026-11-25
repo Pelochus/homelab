@@ -8,7 +8,6 @@ packages through `apt`.
 - Install on the internal SSD, enable SSH
 - Non-root main user, in `docker` and `sudoers`
 - fstab entry for the external HDD (`nofail`, see [Hardware](HARDWARE.md))
-- Timezone `Europe/Madrid`, set by the config role
 - Only the VPN port is open (51820/UDP); everything else is reached through the VPN
 
 ## Owned by the config role
@@ -20,7 +19,7 @@ packages through `apt`.
   plus coreutils replacements (`eza`, `bat`, `ripgrep`, `fd`, `zoxide`, `duf`, `ncdu`, `fzf`)
 - **Unattended upgrades**: `/etc/apt/apt.conf.d/20unattended-upgrades` replaces the distro default
   (security + suite pocket, no auto-reboot, no removals); `20archive` is left untouched
-- **Timezone**: `config_timezone`
+- **Timezone**: `config_timezone`, `Europe/Madrid` on this node
 - **Hardware watchdog**: `/etc/watchdog.conf` + `/etc/default/watchdog`, device
   `/dev/watchdog0`, timeout 30, interval 10; a hung kernel reboots the node
 - **Refresh timer**: `homelab-refresh.service` + `.timer`, cadence `*-*-01 04:00`, output

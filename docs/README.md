@@ -1,6 +1,6 @@
 # Homelab docs
 
-The repo code is the source of truth; these pages point at it and state the rules around it.
+The repo code is the source of truth; these pages state the rules around it.
 
 ## Pages
 

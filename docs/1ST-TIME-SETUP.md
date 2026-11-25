@@ -3,11 +3,10 @@
 Order of work on a fresh node:
 
 1. Set up **DuckDNS**: subdomain, the cron script that re-validates it, a certificate.
-   The VPN is the only public entry point.
 2. Install **Ubuntu Server** (or Debian). Only Debian/Ubuntu-based systems are supported,
    because of `apt`.
 3. Enable SSH, install `git`, clone this repo.
-4. Add the fstab entry for the external HDD with `nofail`, so a disconnected disk still boots.
+4. Add the fstab entry for the external HDD with `nofail`.
 5. Set the timezone (`timedatectl set-timezone Europe/Madrid`) and the node facts:
    `ansible/hosts`, `ansible/group_vars/all.yml`, `ansible/group_vars/<node>.yml`.
 6. Run `setup.sh` (first-run bootstrap), then `secrets.sh` to write each stack's
@@ -24,8 +23,6 @@ Order of work on a fresh node:
 
 ## Secrets
 
-- Secrets: gitignored `docker/<stack>/.secrets.env`, read through `env_file`.
-- Node facts: tracked `docker/<stack>/.env`.
 - A credential that must survive a from-scratch redeploy is tracked as a one-way hash.
 - `./secrets.sh` writes the generated ones; `setup.sh` runs it when the file is missing.
 - `docker/others/.env`: `CODE_SERVER_HASHED_PASSWORD` — argon2 only, bcrypt rejected;
@@ -49,3 +46,4 @@ Order of work on a fresh node:
 - [Docs index](README.md)
 - [OS setup facts](OS.md)
 - [Software and ports](SOFTWARE.md)
+- [Files per stack and secrets](DOCKER.md)

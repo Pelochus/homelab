@@ -1,8 +1,6 @@
 # Ansible
 
-Ansible automates the OS layer and the service deploy. One node today (`[master]`), a
-cluster later: a second node is a new group in `ansible/hosts` with its own playbook, not
-a playbook that branches.
+Ansible automates the OS layer and the service deploy.
 
 ## Playbooks (`ansible/*.yml`)
 
@@ -25,10 +23,12 @@ cd ~/homelab/ansible && sudo ansible-playbook os-config.yml
 
 ## Facts live in group_vars, not in roles
 
-- `ansible/group_vars/all.yml` — shared: `homelab_root`, `compose_stacks`,
-  `deploy_docker_subnet`, package lists, backup paths
-- `ansible/group_vars/master.yml` — per node: `user`, `uid`, `gid`,
-  `deploy_samba_share`, `deploy_docker_group`, `config_timezone`
+- `ansible/group_vars/all.yml` — shared facts: `user`, `homelab_root`, `compose_stacks`,
+  `apt_cache_valid_time_installs`, `docker_prune_filter`
+- `ansible/group_vars/<node>.yml` — per-node overrides; empty today, the commented
+  `backups_paths` and `backups_dest` show the shape
+- `ansible/roles/<role>/defaults/main.yml` — the role-prefixed facts (`deploy_samba_share`,
+  `config_timezone`), overridden by a group file
 - `ansible/hosts` — `[master]` = `serverbollo`; `[containers]` commented out
 - `ansible/ansible.cfg` — `inventory = hosts`, `pipelining = True`
 - `ansible/requirements.yml` — `community.docker` collection, so
@@ -45,8 +45,6 @@ cd ~/homelab/ansible && sudo ansible-playbook os-config.yml
 
 - The node has no `ansible`, `ansible-lint` or `yamllint`; install them outside the repo.
 - No `NOPASSWD` in sudoers → run playbooks with `sudo`.
-- `docker_compose_v2` with `pull: always` always reports a change; that is the timer's
-  intent, not a bug.
 - systemd units name absolute executables (`/usr/bin/ansible-playbook`).
 - `ansible-lint` reads `.ansible-lint*` from the current directory → run
   `ansible-lint ansible` from the repo root; inside `ansible/` it silently uses the

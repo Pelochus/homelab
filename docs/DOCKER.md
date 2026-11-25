@@ -14,14 +14,18 @@ names live in `ansible/group_vars/all.yml:compose_stacks`.
 ## Files per stack
 
 - `docker-compose.yml` — tracked
-- `.env` — node facts (ports, uids, paths, host device GIDs), tracked
+- `.env` — node facts (ports, uids, paths, host device GIDs), tracked; values pass
+  through compose interpolation, so a `$` in a value doubles: `$$` in the file is one
+  `$` at runtime, and an unescaped hash arrives mangled and the service silently loses
+  its auth
 - `.secrets.env` — secrets, gitignored, read through `env_file`
 - state dirs (`<stack>/<service>/`) — untracked
 
 ## Network
 
 - All stacks use the external `homelab` network (`10.0.1.0/24`, gateway `10.0.1.1`); each
-  service gets an `ipv4_address` from `10.0.1.10` up.
+  service gets an `ipv4_address` from `10.0.1.10` up. One may stay a literal until
+  another node would have to change it; name it then (`ADGUARD_IPV4`).
 - A container with `network_mode: host` or `pid: host` sits outside it and cannot resolve
   a `10.0.1.x` peer: it reaches siblings through a shared volume or the public URL
   (`beszel-agent`, `BESZEL_URL`, `beszel.sock`).
@@ -51,6 +55,8 @@ names live in `ansible/group_vars/all.yml:compose_stacks`.
 - Every image carries an explicit `:latest` — never a pin, never a bare tag.
 - Upstream drift is accepted the way `apt upgrade` is, and the monthly refresh repairs a
   bad release.
+- linuxserver images own `/init` with s6-overlay and refuse to run outside pid 1, so
+  those containers get no `init: true`.
 
 ## Refresh
 
