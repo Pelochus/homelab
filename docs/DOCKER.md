@@ -38,8 +38,9 @@ names live in `ansible/group_vars/all.yml:compose_stacks`.
 
 ## Health
 
-- Every container has a `healthcheck:` block, so `docker ps` shows `(healthy)` and Beszel's
-  health column is real instead of `None`.
+- Every container reports `(healthy)`: the stacks carry a `healthcheck:` block, and jellyfin,
+  Homarr and wg-easy rely on the `HEALTHCHECK` their image declares — those three need
+  none here.
 - `healthcheck.test` must start with `CMD`, `CMD-SHELL`, or `NONE` — `EXEC` is rejected
   even though the Docker docs show it. A warm-up goes in `start_period`.
 - Any `${VAR}` used inside a `healthcheck:` must exist in that stack's `.env`; an unset
