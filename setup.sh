@@ -34,7 +34,7 @@ run_playbooks() {
 
 if ! command -v ansible >/dev/null 2>&1; then
     echo "Ansible is not installed; installing it now."
-    sudo apt update && sudo apt install -y ansible
+    sudo apt-get update && sudo apt-get install -y ansible
 fi
 
 if ! ansible-galaxy collection list 2>/dev/null | grep -q 'community\.docker'; then

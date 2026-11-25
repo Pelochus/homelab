@@ -43,3 +43,6 @@ jobs:
           for compose in docker/*/docker-compose.yml; do
             docker compose -f "$compose" config > /dev/null
           done
+      # the same markdown rules the commit gate runs
+      - name: markdown links
+        run: ./lint.sh markdown

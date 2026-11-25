@@ -1,10 +1,10 @@
 #!/bin/sh
-# pre-commit gate: run the repo linters and the markdown link check before a commit.
-# The YAML/Ansible checks have one implementation: they live in ./lint.sh, the
-# mirror of CI's .github/workflows/lint.yml. This hook only decides whether they
-# can run: the tools are installed outside the repo (AGENTS.md §5), and a run
-# where a tool is silently absent proves nothing, so a missing tool skips the
-# gate with a note instead of failing every commit on that box.
+# pre-commit gate: run the repo linters and the markdown link checks before a commit.
+# Both have one implementation: they live in ./lint.sh, the mirror of CI's
+# .github/workflows/lint.yml. This hook only decides whether the YAML/Ansible
+# checks can run: the tools are installed outside the repo, and a run where a
+# tool is silently absent proves nothing, so a missing tool skips those checks
+# with a note. The markdown checks need no extra tool and always run.
 #
 # Install: git config core.hooksPath .githooks (setup.sh does it on a fresh node)
 # Override the tool location: LINT_BIN=/path/to/bin ./commit
@@ -23,42 +23,8 @@ if [ -n "$missing" ]
 then
     echo "pre-commit: skipping the YAML/Ansible checks - missing tool:" \
         "$missing - install it outside the repo, see AGENTS.md"
-else
-    ./lint.sh || exit 1
+    ./lint.sh markdown || exit 1
+    exit 0
 fi
 
-# markdown: link syntax written twice, and relative links that resolve to nothing
-status=0
-for file in $(git ls-files '*.md')
-do
-    dir=$(dirname "$file")
-
-    if grep -q '\[[^]]*\[[^]]*\](' "$file"
-    then
-        echo "pre-commit: $file has a link written as [Text[Text](target)"
-        status=1
-    fi
-
-    broken=$(
-        grep -o '](\([^)]*\))' "$file" 2>/dev/null |
-            sed 's/](\(.*\))/\1/' |
-            while read -r target
-            do
-                case "$target" in
-                    http* | \#*) continue ;;
-                esac
-                [ -e "$dir/$target" ] || echo "$target"
-            done
-    )
-
-    if [ -n "$broken" ]
-    then
-        for target in $broken
-        do
-            echo "pre-commit: $file links to $target, which does not exist"
-        done
-        status=1
-    fi
-done
-
-exit "$status"
+./lint.sh || exit 1
