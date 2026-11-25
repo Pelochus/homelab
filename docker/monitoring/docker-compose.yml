@@ -3,6 +3,7 @@ services:
   homarr:
     container_name: homarr
     image: ghcr.io/homarr-labs/homarr:latest
+    # the image declares its own HEALTHCHECK (/api/health/live), so no healthcheck: block
     init: true
     restart: unless-stopped
     # secrets stay out of git: the gitignored .secrets.env is absent in CI, present on the node

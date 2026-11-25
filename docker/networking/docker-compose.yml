@@ -67,6 +67,7 @@ services:
       # - UI_TRAFFIC_STATS=true
       # - UI_CHART_TYPE=0
     image: ghcr.io/wg-easy/wg-easy:latest
+    # the image declares its own HEALTHCHECK (wg show), so no healthcheck: block
     container_name: wg-easy
     init: true
     volumes:

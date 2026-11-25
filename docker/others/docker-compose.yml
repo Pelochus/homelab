@@ -8,8 +8,9 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${HOMELAB_TZ}
-      - HASHED_PASSWORD=${CODE_SERVER_HASHED_PASSWORD:?argon2 hash required, see README}
-      - PROXY_DOMAIN=${CODE_SERVER_HOST}
+      # the hash and the proxy domain come from .env; both are required
+      - HASHED_PASSWORD=${CODE_SERVER_HASHED_PASSWORD:?argon2 hash required}
+      - PROXY_DOMAIN=${CODE_SERVER_HOST:?must match the Nginx Proxy Manager domain}
       - DEFAULT_WORKSPACE=${CODE_SERVER_WORKSPACE}
     volumes:
       - ./code-server/config:/config

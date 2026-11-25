@@ -122,6 +122,7 @@ services:
   jellyfin:
     container_name: jellyfin
     image: jellyfin/jellyfin:latest
+    # the image declares its own HEALTHCHECK (curl $HEALTHCHECK_URL), so no healthcheck: block
     init: true
     user: ${JELLYFIN_UID}:${JELLYFIN_GID}
     # network_mode: host # DLNA only; conflicts with the networks block below
